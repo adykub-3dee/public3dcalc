@@ -82,35 +82,55 @@
 
         .search-input { width: 100%; background: var(--job-bg); border: 2px solid var(--primary); color: var(--text); padding: 12px; border-radius: 10px; font-weight: bold; box-sizing: border-box; margin-bottom: 15px; }
 
-        .job-card { background: var(--job-bg); padding: 12px 15px; border-radius: 10px; margin-bottom: 8px; border: 1px solid var(--border); display: flex; align-items: center; gap: 15px; justify-content: space-between; flex-wrap: wrap; transition: all 0.2s ease; }
-        .job-card.is-editing { border: 2px solid var(--accent) !important; background: rgba(255, 204, 0, 0.15); animation: pulse-edit 1.5s infinite; }
-        .job-card.is-cp { border: 1px dashed var(--cp-color); opacity: 0.8; }
-        .type-buy { border-left: 5px solid var(--danger); }
-        .type-print { border-left: 5px solid var(--primary); }
-
-        .sort-controls { display: flex; flex-direction: column; align-items: center; gap: 4px; padding-right: 10px; border-right: 1px solid var(--border); }
-        .sc-btn { font-size: 0.9em; cursor: pointer; color: #888; transition: 0.2s; user-select: none; }
-        .sc-drag { font-weight: bold; font-size: 1.3em; cursor: grab; padding: 2px; }
-
-        .job-info { flex: 2; min-width: 150px; }
-        .job-name { font-weight: bold; display: block; font-size: 1.1em; margin-bottom: 4px; }
-        .job-tag { font-size: 0.6em; padding: 2px 5px; border-radius: 4px; margin-left: 5px; vertical-align: middle; }
-        .tag-cp { background: #666; color: #fff; }
-        .tag-ok { background: var(--success); color: #000; }
-
-        .job-data { display: flex; gap: 15px; text-align: right; flex-grow: 1; justify-content: flex-end; }
-        .data-item { display: flex; flex-direction: column; min-width: 85px; }
-        .data-label { font-size: 0.65em; color: #888; text-transform: uppercase; font-weight: bold; }
-        .data-val { font-size: 1.05em; font-weight: bold; white-space: nowrap; }
-        .data-sub { font-size: 0.65em; color: #888; margin-top: 2px; }
-
-        .job-profit { min-width: 80px; text-align: right; font-weight: 900; font-size: 1.3em; border-left: 1px solid var(--border); padding-left: 15px; }
-        .profit-label { font-size: 0.45em; display: block; color: #888; text-transform: uppercase; margin-bottom: 4px; }
+        /* --- UPRAVENÝ RIADOK POLOŽKY (BETA LOOK) --- */
+        .job-card { 
+            background: #111; 
+            border: 1px solid #333; 
+            border-radius: 12px; 
+            margin-bottom: 10px; 
+            display: flex; 
+            align-items: center; 
+            overflow: hidden; 
+            position: relative;
+            transition: 0.2s;
+            flex-wrap: nowrap; /* BETA layout je lineárny */
+        }
+        .job-card.is-editing { border: 2px solid var(--accent) !important; background: rgba(255, 204, 0, 0.1) !important; }
+        .job-card.is-cp { opacity: 0.7; border-style: dashed; }
         
-        .actions { display: flex; gap: 5px; }
-        .action-btn { background: var(--btn-bg); border: 1px solid var(--border); color: #888; cursor: pointer; padding: 8px; border-radius: 6px; }
-        .action-btn.active-status { background: var(--success); color: #000; border-color: var(--success); }
-        .action-btn.is-active-edit { background: var(--accent) !important; color: #000 !important; animation: pulse-edit 1.5s infinite; }
+        .type-print { border-left: none; position: relative; }
+        .type-print::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--primary); }
+        .type-buy::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--danger); }
+
+        .sort-controls { display: flex; flex-direction: column; align-items: center; padding: 0 12px; color: #444; border-right: 1px solid #222; }
+        .sc-drag { font-weight: bold; font-size: 1.2em; cursor: grab; user-select: none; }
+
+        .job-info { padding: 12px 15px; flex: 1.5; min-width: 140px; }
+        .job-name { font-weight: 800; font-size: 1.25em; display: block; color: #fff; text-transform: lowercase; }
+        .job-specs { color: #888; font-size: 0.85em; font-weight: bold; margin-top: 2px; }
+        .job-date { color: #444; font-size: 0.7em; margin-top: 2px; }
+
+        .job-data { display: flex; gap: 20px; padding: 0 20px; border-right: 1px solid #222; align-items: center; justify-content: flex-end; }
+        .data-item { text-align: center; min-width: 85px; }
+        .data-label { font-size: 0.55em; color: #666; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 2px; }
+        .data-val { font-size: 1.1em; font-weight: 900; white-space: nowrap; }
+        
+        .val-cost { color: #ff3e3e; }
+        .val-sell { color: #00a2ff; }
+
+        .job-profit { min-width: 100px; text-align: right; padding: 0 20px; }
+        .profit-val { font-size: 1.4em; font-weight: 900; color: #00ff88; }
+        
+        .actions { display: flex; gap: 6px; padding: 0 15px; }
+        .action-btn { 
+            background: #1a1a1a; border: 1px solid #333; color: #888; 
+            width: 34px; height: 34px; border-radius: 8px; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.2s;
+        }
+        .action-btn:hover { background: #222; color: #fff; }
+        .action-btn.active-status { background: #00ff88 !important; color: #000 !important; font-weight: bold; border-color: #00ff88; }
+        .action-btn.is-active-edit { background: var(--accent) !important; color: #000 !important; }
 
         @keyframes pulse-edit { 0% { box-shadow: 0 0 5px var(--accent); } 50% { box-shadow: 0 0 18px var(--accent); } 100% { box-shadow: 0 0 5px var(--accent); } }
 
@@ -235,7 +255,7 @@
     let totalUsersCount = 0;
     let currentLang = 'en';
     let currentCurr = 'EUR';
-    const exchangeRate = 25.0; // Fixny kurz pre prepocet configu
+    const exchangeRate = 25.0; 
 
     const dict = {
         sk: {
@@ -299,7 +319,6 @@
         document.getElementById('cur_eur').classList.toggle('active', c === 'EUR');
         document.getElementById('cur_czk').classList.toggle('active', c === 'CZK');
         
-        // Prepocet configu pri prepnuti
         if(old !== c) {
             let f = document.getElementById('cfg_fil');
             let e = document.getElementById('cfg_ele');
@@ -497,6 +516,7 @@
         refreshUI();
     }
 
+    /* --- UPRAVENÁ FUNKCIA PRE ZOBRAZENIE POLOŽIEK (BETA + PREPOČET MENY) --- */
     function refreshUI() {
         const container = document.getElementById('list_container');
         const query = document.getElementById('search_input').value.toLowerCase();
@@ -508,45 +528,72 @@
 
         items.forEach(i => {
             const isMatch = i.name.toLowerCase().includes(query);
+            
+            // PREPOČET HODNÔT PRE ZOBRAZENIE PODĽA AKTUÁLNEJ MENY
+            let dCost = i.cost;
+            let dSell = i.sell;
+            let dProfit = i.profit;
+
+            if (i.currency === 'EUR' && currentCurr === 'CZK') {
+                dCost *= exchangeRate; dSell *= exchangeRate; dProfit *= exchangeRate;
+            } else if (i.currency === 'CZK' && currentCurr === 'EUR') {
+                dCost /= exchangeRate; dSell /= exchangeRate; dProfit /= exchangeRate;
+            }
+
             if(i.status === 'ok') {
-                s_rev += i.sell; s_prof += i.profit;
+                s_rev += dSell; s_prof += dProfit;
                 if(i.type === 'print') {
                     s_kg += (i.totalW || 0); s_time += (i.mins || 0); s_ord++;
-                    s_mat += (i.matCost || 0); s_ele += (i.eleCost || 0);
-                } else { s_oth += i.cost; }
+                    // Súčet nákladov spracujeme v aktuálnej mene
+                    if(i.currency === currentCurr) {
+                        s_mat += (i.matCost || 0); s_ele += (i.eleCost || 0);
+                    } else if(currentCurr === 'CZK') {
+                        s_mat += (i.matCost * exchangeRate); s_ele += (i.eleCost * exchangeRate);
+                    } else {
+                        s_mat += (i.matCost / exchangeRate); s_ele += (i.eleCost / exchangeRate);
+                    }
+                } else { s_oth += dCost; }
             }
             if(!isMatch) return;
 
+            // HTML RIADKU (BETA LAYOUT)
             const card = document.createElement('div');
             card.className = `job-card type-${i.type} ${editingId===i.id?'is-editing':''} ${i.status==='cp'?'is-cp':''}`;
-            const iSym = i.currency === 'CZK' ? 'Kč' : '€';
             
             card.innerHTML = `
                 <div class="sort-controls">
-                    <span class="sc-drag">⋮⋮</span>
-                    <span class="sc-btn" onclick="duplicateItem(${i.id})">＋</span>
+                    <span class="sc-drag">＝</span>
                 </div>
                 <div class="job-info">
-                    <span class="job-name">${i.name} <span class="job-tag tag-${i.status}">${i.status.toUpperCase()}</span></span>
-                    <div class="data-sub">${i.date} | ${i.type==='print' ? (i.totalW+'g, '+(i.mins/60).toFixed(1)+'h') : t.buy}</div>
+                    <span class="job-name">${i.name}</span>
+                    <div class="job-specs">${i.type==='print' ? (i.count+'ks | '+i.weight+'g | '+i.h+'h '+i.m+'m') : t.buy}</div>
+                    <div class="job-date">${i.date}</div>
                 </div>
                 <div class="job-data">
-                    <div class="data-item"><span class="data-label">${t.cost}</span><span class="data-val">${i.cost.toFixed(2)} ${iSym}</span></div>
-                    <div class="data-item"><span class="data-label">${t.sell}</span><span class="data-val">${i.sell.toFixed(2)} ${iSym}</span></div>
+                    <div class="data-item">
+                        <span class="data-label">${t.cost}</span>
+                        <span class="data-val val-cost">${dCost.toFixed(2)} ${sym}</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">${t.sell}</span>
+                        <span class="data-val val-sell">${dSell.toFixed(2)} ${sym}</span>
+                    </div>
                 </div>
                 <div class="job-profit">
-                    <span class="profit-label">${t.profit}</span>
-                    <span style="color:${i.profit>=0?'var(--success)':'var(--danger)'}">${i.profit.toFixed(2)} ${iSym}</span>
+                    <span class="data-label">${t.profit}</span>
+                    <span class="profit-val">${dProfit.toFixed(2)} ${sym}</span>
                 </div>
                 <div class="actions">
-                    <button class="action-btn ${i.status==='ok'?'active-status':''}" onclick="toggleItemStatus(${i.id})">✓</button>
+                    <button class="action-btn" onclick="duplicateItem(${i.id})">❐</button>
                     <button class="action-btn ${editingId===i.id?'is-active-edit':''}" onclick="editItem(${i.id})">✎</button>
                     <button class="action-btn" onclick="deleteItem(${i.id})">🗑</button>
+                    <button class="action-btn ${i.status==='ok'?'active-status':''}" onclick="toggleItemStatus(${i.id})">✓</button>
                 </div>
             `;
             container.appendChild(card);
         });
 
+        // SUMMARY UPDATE
         document.getElementById('total_kg_ever').innerText = (s_kg/1000).toFixed(2) + " kg";
         document.getElementById('total_time_ever').innerText = Math.floor(s_time/60) + "h " + (s_time%60) + "m";
         document.getElementById('stat_count').innerText = s_ord;
