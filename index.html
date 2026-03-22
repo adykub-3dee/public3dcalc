@@ -3,89 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>3Dee Pro - Business Calc</title>
+    <title>3Dee Pro - Cloud & Business</title>
     <style>
         :root {
+            /* DARK MODE (Default) */
             --bg: #0a0a0a; --card: #161616; --text: #ffffff;
             --primary: #00a2ff; --accent: #ffcc00; --danger: #ff3e3e; --success: #00ff88;
             --border: #333; --cp-color: #aaa; --input-bg: #000; --input-border: #444;
             --btn-bg: #222; --job-bg: #1a1a1a;
         }
+
         .light-theme {
+            /* LIGHT MODE */
             --bg: #f4f5f7; --card: #ffffff; --text: #111111;
             --primary: #0066cc; --accent: #e6b800; --danger: #cc0000; --success: #009944;
             --border: #cccccc; --cp-color: #777777; --input-bg: #ffffff; --input-border: #bbbbbb;
             --btn-bg: #eeeeee; --job-bg: #fdfdfd;
         }
+
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); padding: 10px; margin: 0; transition: background 0.3s, color 0.3s; }
+        
         .header { width: 100%; max-width: 1200px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 12px; margin: 0 auto 15px auto; gap: 10px; }
         .header-center { flex-grow: 1; text-align: center; }
         #live-clock { font-size: 1.8em; font-weight: 900; color: var(--text); margin-bottom: 2px; }
-        #live-date { font-size: 0.85em; color: var(--primary); text-transform: uppercase; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .config-bar { background: var(--job-bg); padding: 10px; border-radius: 10px; display: flex; gap: 10px; border: 1px solid var(--primary); align-items: flex-end; flex-wrap: wrap;}
-        .config-input { background: var(--input-bg); border: 1px solid var(--primary); color: var(--primary); font-weight: bold; text-align: center; border-radius: 4px; padding: 5px; width: 65px; }
+        #live-date { font-size: 0.85em; color: var(--primary); text-transform: uppercase; font-weight: bold; }
+        
+        .config-bar { background: var(--job-bg); padding: 10px; border-radius: 10px; display: flex; gap: 10px; border: 1px solid var(--primary); align-items: flex-end;}
+        .config-input { background: var(--input-bg); border: 1px solid var(--primary); color: var(--primary); font-weight: bold; text-align: center; border-radius: 4px; padding: 5px; width: 60px; }
         .btn-toggle { background: var(--btn-bg); color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 5px 10px; font-weight: bold; cursor: pointer; transition: 0.2s; height: 30px; display: flex; align-items: center; justify-content: center;}
-        .lang-switcher, .curr-switcher { display: flex; gap: 5px; margin-right: 10px; align-items: center; }
-        .lang-btn, .curr-btn { background: transparent; border: none; color: #666; cursor: pointer; font-weight: bold; font-size: 0.8em; padding: 2px 5px; transition: 0.3s; }
-        .lang-btn.active, .curr-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
-        .btn-info { background: transparent; color: var(--primary); border: 1px solid var(--primary); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 0.7em; cursor: pointer; font-weight: bold; margin-left: 5px;}
+
         .main-layout { width: 100%; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 20px; }
         @media (min-width: 768px) { .main-layout { grid-template-columns: 340px 1fr; } }
+
         .panel { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid var(--border); transition: all 0.3s; }
         .sticky { position: sticky; top: 15px; }
+
         label { display: block; font-size: 0.65em; color: #888; text-transform: uppercase; margin-bottom: 4px; font-weight: 600; }
-        input { width: 100%; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text); padding: 10px; border-radius: 8px; box-sizing: border-box; font-size: 16px; margin-bottom: 8px; outline: none; }
+        input { width: 100%; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text); padding: 10px; border-radius: 8px; box-sizing: border-box; font-size: 16px; margin-bottom: 8px; outline: none; transition: 0.3s; }
+        
         .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
         .status-toggle { display: flex; background: var(--input-bg); border-radius: 8px; border: 1px solid var(--input-border); margin-bottom: 15px; overflow: hidden; }
-        .st-btn { flex: 1; padding: 10px; text-align: center; font-weight: bold; cursor: pointer; font-size: 0.8em; color: #777; }
+        .st-btn { flex: 1; padding: 10px; text-align: center; font-weight: bold; cursor: pointer; font-size: 0.8em; transition: 0.2s; color: #777; }
         .st-btn.active { color: #fff; }
         .light-theme .st-btn.active { color: #000; }
         .st-btn-cp.active { background: var(--cp-color); }
         .st-btn-ok.active { background: var(--success); color: #000; }
+
         .calc-preview { background: rgba(255, 204, 0, 0.05); padding: 12px; border-radius: 10px; margin: 10px 0; border: 1px solid var(--accent); color: var(--accent); }
         .line { display: flex; justify-content: space-between; align-items: center; font-weight: bold; margin-bottom: 5px; }
+        .input-inline { background: rgba(255, 204, 0, 0.1); border: 1px solid var(--accent); color: var(--accent); padding: 4px 8px; border-radius: 4px; width: 85px; text-align: right; font-weight: bold; }
+
         .btn-add { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase; margin-top: 5px; }
+        .btn-edit-mode { background: var(--accent); color: #000; }
+        .btn-buy { background: transparent; color: var(--success); border: 1px solid var(--success); padding: 8px; width: 100%; border-radius: 10px; margin-top: 10px; cursor: pointer; font-weight: bold; }
+
+        .cloud-zone { display: flex; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); }
+        .btn-cloud { flex: 1; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 0.8em; }
+        .btn-backup { background: #0044cc; color: white; }
+        .btn-restore { background: var(--btn-bg); color: var(--text); border: 1px solid var(--border); }
+
         .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
         @media (min-width: 900px) { .summary-grid { grid-template-columns: repeat(4, 1fr); } }
+        
         .stat-card { background: var(--job-bg); padding: 12px; border-radius: 12px; border: 1px solid var(--border); text-align: center; }
+        .stat-label { font-size: 0.6em; color: #888; text-transform: uppercase; }
         .stat-value { font-size: 1.1em; font-weight: 900; }
+        .card-spent { color: var(--danger); border-bottom: 2px solid var(--danger); }
+        .card-profit { border: 2px solid var(--success); color: var(--success); }
+
         .search-input { width: 100%; background: var(--job-bg); border: 2px solid var(--primary); color: var(--text); padding: 12px; border-radius: 10px; font-weight: bold; box-sizing: border-box; margin-bottom: 15px; }
-        .job-card { background: var(--job-bg); padding: 12px 15px; border-radius: 10px; margin-bottom: 8px; border: 1px solid var(--border); display: flex; align-items: center; gap: 15px; justify-content: space-between; flex-wrap: wrap; }
+
+        /* JOB CARD & LAYOUT */
+        .job-card { background: var(--job-bg); padding: 12px 15px; border-radius: 10px; margin-bottom: 8px; border: 1px solid var(--border); display: flex; align-items: center; gap: 15px; justify-content: space-between; flex-wrap: wrap; transition: all 0.2s ease; }
+        .job-card.is-editing { border: 2px solid var(--accent) !important; background: rgba(255, 204, 0, 0.1); box-shadow: 0 0 15px rgba(255, 204, 0, 0.2); }
+        .job-card.is-cp { border: 1px dashed var(--cp-color); opacity: 0.8; }
+        .type-buy { border-left: 5px solid var(--danger); }
         .type-print { border-left: 5px solid var(--primary); }
+        .is-cp.type-print { border-left: 5px solid var(--cp-color); }
+
+        .sort-controls { display: flex; flex-direction: column; align-items: center; gap: 4px; padding-right: 10px; border-right: 1px solid var(--border); }
+        .sc-btn { font-size: 0.9em; cursor: pointer; color: #888; transition: 0.2s; user-select: none; }
+        .sc-btn:hover { color: var(--text); }
+        .sc-drag { font-weight: bold; font-size: 1.3em; cursor: grab; padding: 2px; }
+
         .job-info { flex: 2; min-width: 150px; }
-        .job-name { font-weight: bold; display: block; font-size: 1.1em; }
+        .job-name { font-weight: bold; display: block; font-size: 1.1em; margin-bottom: 4px; }
+        .job-tag { font-size: 0.6em; padding: 2px 5px; border-radius: 4px; margin-left: 5px; vertical-align: middle; }
+        .tag-cp { background: #666; color: #fff; }
+        .tag-ok { background: var(--success); color: #000; }
+
         .job-data { display: flex; gap: 15px; text-align: right; flex-grow: 1; justify-content: flex-end; }
         .data-item { display: flex; flex-direction: column; min-width: 85px; }
+        .data-label { font-size: 0.65em; color: #888; text-transform: uppercase; font-weight: bold; }
+        .data-val { font-size: 1.05em; font-weight: bold; white-space: nowrap; }
+        .data-sub { font-size: 0.65em; color: #888; margin-top: 2px; }
+
         .job-profit { min-width: 80px; text-align: right; font-weight: 900; font-size: 1.3em; border-left: 1px solid var(--border); padding-left: 15px; }
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; backdrop-filter: blur(3px); }
-        .modal-content { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card); padding: 25px; border: 2px solid var(--primary); z-index: 1000; border-radius: 15px; width: 90%; max-width: 400px; }
-        .sort-controls { display: flex; flex-direction: column; align-items: center; gap: 4px; padding-right: 10px; border-right: 1px solid var(--border); }
-        .sc-drag { font-weight: bold; font-size: 1.3em; cursor: grab; padding: 2px; }
+        .profit-label { font-size: 0.45em; display: block; color: #888; text-transform: uppercase; margin-bottom: 4px; }
+        
+        .actions { display: flex; gap: 5px; }
+        .action-btn { background: var(--btn-bg); border: 1px solid var(--border); color: #888; cursor: pointer; padding: 8px; border-radius: 6px; transition: 0.3s; }
+        .action-btn:hover { color: var(--text); }
+        .action-btn.active-status { background: var(--success); color: #000; border-color: var(--success); }
+        .action-btn.is-active-edit { background: var(--accent) !important; color: #000 !important; border-color: var(--accent); box-shadow: 0 0 12px var(--accent); animation: pulse-edit 1.5s infinite; }
+
+        @keyframes pulse-edit { 0% { box-shadow: 0 0 5px var(--accent); } 50% { box-shadow: 0 0 18px var(--accent); } 100% { box-shadow: 0 0 5px var(--accent); } }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <div>
-        <div id="user_display"></div>
-        <h1 style="margin:0; font-size:1.4em; color:var(--primary);">3Dee <span style="color:var(--text)">PRO calc</span></h1>
-    </div>
+    <h1 style="margin:0; font-size:1.4em; color:var(--primary);">3Dee <span style="color:var(--text)">PRO calc</span></h1>
     <div class="header-center">
         <div id="live-clock">--:--:--</div>
-        <div id="live-date">--.--.---- <button class="btn-info" onclick="openInfo()">i</button></div>
+        <div id="live-date">--.--.----</div>
     </div>
     <div class="config-bar">
-        <div><label id="cfg_lbl_fil">/KG</label><input type="number" id="cfg_fil" value="19" class="config-input"></div>
-        <div><label id="cfg_lbl_ele">/KWH</label><input type="number" id="cfg_ele" value="0.19" class="config-input"></div>
-        <div class="curr-switcher">
-            <button class="curr-btn active" id="cur_eur" onclick="setCurrency('EUR')">EUR</button>
-            <button class="curr-btn" id="cur_czk" onclick="setCurrency('CZK')">CZK</button>
-        </div>
-        <div class="lang-switcher">
-            <button class="lang-btn" id="l_en" onclick="setLang('en')">EN</button>
-            <button class="lang-btn" id="l_sk" onclick="setLang('sk')">SK</button>
-            <button class="lang-btn" id="l_cz" onclick="setLang('cz')">CZ</button>
-        </div>
+        <div><label>€/KG</label><input type="number" id="cfg_fil" value="19" class="config-input"></div>
+        <div><label>€/KWH</label><input type="number" id="cfg_ele" value="0.19" class="config-input"></div>
+        <button id="btn_lang" class="btn-toggle" onclick="toggleLang()">SK</button>
         <button id="btn_theme" class="btn-toggle" onclick="toggleTheme()">🌙</button>
     </div>
 </div>
@@ -93,191 +130,130 @@
 <div class="main-layout">
     <div class="side-panels">
         <div class="panel sticky">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
-                <button class="btn-toggle" style="background:var(--primary); color:white;" onclick="handleCloud('backup')">BACKUP ☁️</button>
-                <button class="btn-toggle" onclick="handleCloud('restore')">RESTORE ⬇️</button>
-            </div>
+            <h2 id="form_title" style="color:var(--primary); font-size: 1.1em; margin-bottom: 15px;">✚ NOVÁ TLAČ</h2>
             
-            <h2 id="form_title" style="color:var(--primary); font-size: 1.1em;">✚ NOVÁ TLAČ</h2>
+            <label id="lbl_type">Typ záznamu</label>
             <div class="status-toggle">
-                <div id="st_cp" class="st-btn st-btn-cp" onclick="setStatus('cp')">Ponuka (CP)</div>
-                <div id="st_ok" class="st-btn st-btn-ok active" onclick="setStatus('ok')">Hotovo (OK)</div>
+                <div id="st_cp" class="st-btn st-btn-cp" onclick="setStatus('cp')">CP (Ponuka)</div>
+                <div id="st_ok" class="st-btn st-btn-ok active" onclick="setStatus('ok')">OK (Výroba)</div>
             </div>
 
-            <label id="lbl_name">Názov projektu</label>
+            <label id="lbl_name">Názov Projektu</label>
             <input type="text" id="in_name" placeholder="...">
+            <div class="row">
+                <div><label id="lbl_w">Váha/ks (g)</label><input type="number" id="in_w" step="any"></div>
+                <div><label id="lbl_count">Počet ks</label><input type="number" id="in_count" value="1"></div>
+            </div>
+            <div class="row">
+                <div><label id="lbl_h">Hodiny</label><input type="number" id="in_h"></div>
+                <div><label id="lbl_m">Minúty</label><input type="number" id="in_m"></div>
+            </div>
+            <label id="lbl_price">Predajná cena / 1 ks (€)</label>
+            <input type="number" id="in_price_per" step="any">
             
-            <div class="row">
-                <div><label id="lbl_w">Váha/ks (g)</label><input type="number" id="in_w" oninput="updateLivePreview()"></div>
-                <div><label id="lbl_count">Počet kusov</label><input type="number" id="in_count" value="1" oninput="updateLivePreview()"></div>
-            </div>
-            <div class="row">
-                <div><label id="lbl_h">Hodiny</label><input type="number" id="in_h" oninput="updateLivePreview()"></div>
-                <div><label id="lbl_m">Minúty</label><input type="number" id="in_m" oninput="updateLivePreview()"></div>
-            </div>
-            <label id="lbl_price">Predajná cena / 1 ks</label>
-            <input type="number" id="in_price_per" step="any" oninput="updateLivePreview()">
-
-            <div class="calc-preview" id="live_preview">
-                <div class="line"><span>MATERIÁL:</span> <span id="pre_mat">0.00</span></div>
-                <div class="line"><span>ELEKTRINA:</span> <span id="pre_ele">0.00</span></div>
-                <div class="line" style="border-top:1px solid var(--accent); padding-top:5px; margin-top:5px;">
-                    <span>ZISK:</span> <span id="pre_profit" style="font-size:1.2em;">0.00</span>
+            <div class="calc-preview">
+                <div class="line"><span id="lbl_mat_tot">MATERIÁL SPOLU:</span> <span id="view_total_w">0 g</span></div>
+                <div class="line">
+                    <span id="lbl_cost_tot">NÁKLAD (€):</span> 
+                    <input type="number" id="view_total_cost" class="input-inline" step="any" value="0.00" oninput="updatePreview(false)">
+                </div>
+                <div class="line" style="border-top: 1px solid var(--border); padding-top: 5px; font-size: 1.1em;">
+                    <span id="lbl_profit_tot">ČISTÝ ZISK:</span> <span id="view_total_profit">0.00 €</span>
                 </div>
             </div>
+            
+            <button class="btn-add" id="btn_save" onclick="saveItem()">ULOŽIŤ DO HISTÓRIE</button>
+            <button id="btn_cancel" onclick="clearForm()" style="display:none; background:var(--btn-bg); border:1px solid var(--border); color:var(--danger); padding:10px; border-radius:10px; width:100%; margin-top:10px; cursor:pointer; font-weight:bold;">✖ ZRUŠIŤ ÚPRAVU</button>
+            <button class="btn-buy" id="btn_other" onclick="addOtherItem()">✚ NÁKUP / INÉ VÝDAVKY</button>
 
-            <button class="btn-add" id="btn_save" onclick="saveJob()">PRIDAŤ DO ZOZNAMU</button>
+            <div class="cloud-zone">
+                <button class="btn-cloud btn-backup" id="btn_backup" onclick="handleCloud('backup')">☁️ ZÁLOHOVAŤ</button>
+                <button class="btn-cloud btn-restore" id="btn_restore" onclick="handleCloud('restore')">⬇️ OBNOVIŤ</button>
+            </div>
         </div>
     </div>
 
-    <div class="content-area">
+    <div>
         <div class="summary-grid">
-            <div class="stat-card"><div class="stat-value" id="stat_total_income">0.00</div><label>PRÍJEM</label></div>
-            <div class="stat-card"><div class="stat-value" id="total_mat_cost">0.00</div><label>MATERIÁL</label></div>
-            <div class="stat-card"><div class="stat-value" id="total_ele_cost">0.00</div><label>ELEKTRINA</label></div>
-            <div class="stat-card" style="border:2px solid var(--success);"><div class="stat-value" id="stat_profit" style="color:var(--success)">0.00</div><label>ZISK CELKOM</label></div>
+            <div class="stat-card"><div class="stat-label" id="stat_lbl_ok">Vytlačené (OK)</div><div class="stat-value" id="total_kg_ever">0.00 kg</div></div>
+            <div class="stat-card"><div class="stat-label" id="stat_lbl_time">Čas Tlače (OK)</div><div class="stat-value" id="total_time_ever">0h 0m</div></div>
+            <div class="stat-card"><div class="stat-label" id="stat_lbl_ord">Zákazky</div><div class="stat-value" id="stat_count">0</div></div>
+            <div class="stat-card"><div class="stat-label" id="stat_lbl_rev">Obrat</div><div class="stat-value" id="stat_obrat">0.00 €</div></div>
+            <div class="stat-card card-spent"><div class="stat-label" id="stat_lbl_mat">Materiál</div><div class="stat-value" id="total_mat_cost">0.00 €</div></div>
+            <div class="stat-card card-spent"><div class="stat-label" id="stat_lbl_ele">Elektrina</div><div class="stat-value" id="total_ele_cost">0.00 €</div></div>
+            <div class="stat-card card-spent"><div class="stat-label" id="stat_lbl_other">Iné Extra</div><div class="stat-value" id="total_spent_other">0.00 €</div></div>
+            <div class="stat-card card-profit"><div class="stat-label" style="color:var(--success)" id="stat_lbl_profit">Čistý Zisk</div><div class="stat-value" id="stat_profit">0.00 €</div></div>
         </div>
 
-        <input type="text" id="search_box" class="search-input" placeholder="Hľadať projekt..." onkeyup="filterJobs()">
-        <div id="job_list" ondragover="event.preventDefault()"></div>
+        <input type="text" id="search_input" class="search-input" placeholder="🔍 Vyhľadať v histórii..." oninput="refreshUI()">
+        <div id="list_container"></div>
     </div>
-</div>
-
-<div class="modal-overlay" id="modal_overlay" onclick="closeInfo()"></div>
-<div class="modal-content" id="info_modal">
-    <h3 style="color:var(--primary); margin-top:0;">3Dee PRO Info</h3>
-    <div id="info_text_content" style="font-size:0.9em; line-height:1.4;">
-        Aplikácia počíta náklady na základe váhy filamentu a času tlače (predpokladaný odber 150W). Všetky dáta sa ukladajú lokálne.
-    </div>
-    <button class="btn-modal-close" onclick="closeInfo()">ZAVRIEŤ</button>
 </div>
 
 <script>
-    let jobs = JSON.parse(localStorage.getItem('3dee_jobs')) || [];
-    let currency = localStorage.getItem('3dee_curr') || 'EUR';
-    let lang = localStorage.getItem('3dee_lang') || 'sk';
+    const CLOUD_URL = "https://script.google.com/macros/s/AKfycbx3vsb_QIA1Y6bqjifYNDSNaLasMrBIlNe5jJwB4WwwYQItc5R_8qxCa_mAFZ_0t3RV/exec";
+
+    let items = JSON.parse(localStorage.getItem('3dee_items')) || [];
+    let editingId = null;
     let currentStatus = 'ok';
-    let draggedItemIndex = null;
-
-    // --- LOGIKA HODÍN ---
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('live-clock').innerText = now.toLocaleTimeString();
-        document.getElementById('live-date').innerText = now.toLocaleDateString();
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
-
-    // --- LIVE PREVIEW ---
-    function updateLivePreview() {
-        const w = parseFloat(document.getElementById('in_w').value) || 0;
-        const count = parseFloat(document.getElementById('in_count').value) || 1;
-        const h = parseFloat(document.getElementById('in_h').value) || 0;
-        const m = parseFloat(document.getElementById('in_m').value) || 0;
-        const price = parseFloat(document.getElementById('in_price_per').value) || 0;
-        
-        const filPrice = parseFloat(document.getElementById('cfg_fil').value) || 19;
-        const elePrice = parseFloat(document.getElementById('cfg_ele').value) || 0.19;
-
-        const totalMat = (w / 1000) * filPrice * count;
-        const totalTime = h + (m / 60);
-        const totalEle = totalTime * 0.15 * elePrice * count; // 150W priemer
-        const totalProfit = (price * count) - totalMat - totalEle;
-
-        document.getElementById('pre_mat').innerText = totalMat.toFixed(2) + " " + currency;
-        document.getElementById('pre_ele').innerText = totalEle.toFixed(2) + " " + currency;
-        document.getElementById('pre_profit').innerText = totalProfit.toFixed(2) + " " + currency;
-    }
-
-    // --- UKLADANIE ---
-    function saveJob() {
-        const job = {
-            id: Date.now(),
-            name: document.getElementById('in_name').value || 'Nepomenovaný projekt',
-            weight: parseFloat(document.getElementById('in_w').value) || 0,
-            count: parseInt(document.getElementById('in_count').value) || 1,
-            hours: parseInt(document.getElementById('in_h').value) || 0,
-            mins: parseInt(document.getElementById('in_m').value) || 0,
-            price: parseFloat(document.getElementById('in_price_per').value) || 0,
-            status: currentStatus,
-            timestamp: new Date().toISOString()
-        };
-        jobs.unshift(job);
-        renderJobs();
-        clearForm();
-    }
-
-    function renderJobs() {
-        localStorage.setItem('3dee_jobs', JSON.stringify(jobs));
-        const list = document.getElementById('job_list');
-        list.innerHTML = '';
-        
-        let s_inc = 0, s_mat = 0, s_ele = 0;
-        const filPrice = parseFloat(document.getElementById('cfg_fil').value);
-        const elePrice = parseFloat(document.getElementById('cfg_ele').value);
-
-        jobs.forEach((j, index) => {
-            const mCost = (j.weight / 1000) * filPrice * j.count;
-            const eCost = (j.hours + j.mins/60) * 0.15 * elePrice * j.count;
-            const profit = (j.price * j.count) - mCost - eCost;
-
-            if(j.status === 'ok') {
-                s_inc += (j.price * j.count);
-                s_mat += mCost; s_ele += eCost;
-            }
-
-            const div = document.createElement('div');
-            div.className = `job-card type-print ${j.status === 'cp' ? 'is-cp' : ''}`;
-            div.draggable = true;
-            div.ondragstart = () => draggedItemIndex = index;
-            div.ondragover = (e) => e.preventDefault();
-            div.ondrop = () => {
-                const item = jobs.splice(draggedItemIndex, 1)[0];
-                jobs.splice(index, 0, item);
-                renderJobs();
-            };
-
-            div.innerHTML = `
-                <div class="sort-controls"><span class="sc-drag">☰</span></div>
-                <div class="job-info">
-                    <span class="job-name">${j.name}</span>
-                    <small>${j.count}ks | ${j.weight}g | ${j.hours}h ${j.mins}m</small>
-                </div>
-                <div class="job-data">
-                    <div class="data-item">
-                        <span style="font-size:0.7em; color:#888;">NÁKLADY</span>
-                        <b>${(mCost + eCost).toFixed(2)} ${currency}</b>
-                    </div>
-                </div>
-                <div class="job-profit">
-                    <span style="font-size:0.5em; display:block; color:#888;">ZISK</span>
-                    <span style="color:var(--success)">${profit.toFixed(2)}</span>
-                </div>
-                <button onclick="deleteJob(${j.id})" style="background:none; border:none; color:var(--danger); cursor:pointer; font-weight:bold;">✕</button>
-            `;
-            list.appendChild(div);
-        });
-
-        document.getElementById('stat_total_income').innerText = s_inc.toFixed(2);
-        document.getElementById('total_mat_cost').innerText = s_mat.toFixed(2);
-        document.getElementById('total_ele_cost').innerText = s_ele.toFixed(2);
-        document.getElementById('stat_profit').innerText = (s_inc - s_mat - s_ele).toFixed(2);
-    }
-
-    function deleteJob(id) {
-        if(confirm('Naozaj vymazať?')) {
-            jobs = jobs.filter(j => j.id !== id);
-            renderJobs();
+    let isDark = true;
+    let currentLang = 'sk';
+    
+    const dict = {
+        sk: {
+            title: "✚ NOVÁ TLAČ", edit: "✎ UPRAVIŤ TLAČ", cp: "CP (Ponuka)", ok: "OK (Výroba)",
+            type: "Typ záznamu", name: "Názov Projektu", w: "Váha/ks (g)", count: "Počet ks",
+            h: "Hodiny", m: "Minúty", price: "Predajná cena / 1 ks (€)",
+            m_tot: "MATERIÁL SPOLU:", c_tot: "NÁKLAD (€):", p_tot: "ČISTÝ ZISK:",
+            save: "ULOŽIŤ DO HISTÓRIE", save_edit: "ULOŽIŤ ZMENY", cancel: "✖ ZRUŠIŤ ÚPRAVU", other: "✚ NÁKUP / INÉ VÝDAVKY",
+            b_back: "☁️ ZÁLOHOVAŤ", b_rest: "⬇️ OBNOVIŤ",
+            s_ok: "Vytlačené (OK)", s_time: "Čas Tlače", s_ord: "Zákazky", s_rev: "Obrat",
+            s_mat: "Materiál", s_ele: "Elektrina", s_oth: "Iné Extra", s_prof: "Čistý Zisk",
+            search: "🔍 Vyhľadať v histórii...", cost: "Náklad", sell: "Predaj", profit: "Zisk", buy: "Nákup / Výdavok"
+        },
+        en: {
+            title: "✚ NEW PRINT", edit: "✎ EDIT PRINT", cp: "Quote (CP)", ok: "Done (OK)",
+            type: "Record Type", name: "Project Name", w: "Weight/pc (g)", count: "Quantity",
+            h: "Hours", m: "Minutes", price: "Sell Price / 1 pc (€)",
+            m_tot: "MATERIAL TOTAL:", c_tot: "COST (€):", p_tot: "NET PROFIT:",
+            save: "SAVE TO HISTORY", save_edit: "SAVE CHANGES", cancel: "✖ CANCEL EDIT", other: "✚ BUY / EXPENSE",
+            b_back: "☁️ BACKUP", b_rest: "⬇️ RESTORE",
+            s_ok: "Printed (OK)", s_time: "Print Time", s_ord: "Orders", s_rev: "Revenue",
+            s_mat: "Material", s_ele: "Electricity", s_oth: "Other Extra", s_prof: "Net Profit",
+            search: "🔍 Search history...", cost: "Cost", sell: "Sell", profit: "Profit", buy: "Purchase / Expense"
         }
+    };
+
+    function toggleTheme() {
+        isDark = !isDark;
+        document.body.classList.toggle('light-theme', !isDark);
+        document.getElementById('btn_theme').innerText = isDark ? "🌙" : "☀️";
     }
 
-    function clearForm() {
-        document.getElementById('in_name').value = '';
-        document.getElementById('in_w').value = '';
-        document.getElementById('in_h').value = '';
-        document.getElementById('in_m').value = '';
-        document.getElementById('in_price_per').value = '';
-        updateLivePreview();
+    function toggleLang() {
+        currentLang = currentLang === 'sk' ? 'en' : 'sk';
+        document.getElementById('btn_lang').innerText = currentLang.toUpperCase();
+        applyTexts();
+        refreshUI();
+    }
+
+    function applyTexts() {
+        const t = dict[currentLang];
+        document.getElementById('form_title').innerText = editingId ? t.edit : t.title;
+        document.getElementById('st_cp').innerText = t.cp; document.getElementById('st_ok').innerText = t.ok;
+        document.getElementById('lbl_type').innerText = t.type; document.getElementById('lbl_name').innerText = t.name;
+        document.getElementById('lbl_w').innerText = t.w; document.getElementById('lbl_count').innerText = t.count;
+        document.getElementById('lbl_h').innerText = t.h; document.getElementById('lbl_m').innerText = t.m;
+        document.getElementById('lbl_price').innerText = t.price;
+        document.getElementById('lbl_mat_tot').innerText = t.m_tot; document.getElementById('lbl_cost_tot').innerText = t.c_tot; document.getElementById('lbl_profit_tot').innerText = t.p_tot;
+        document.getElementById('btn_save').innerText = editingId ? t.save_edit : t.save;
+        document.getElementById('btn_cancel').innerText = t.cancel; document.getElementById('btn_other').innerText = t.other;
+        document.getElementById('btn_backup').innerText = t.b_back; document.getElementById('btn_restore').innerText = t.b_rest;
+        document.getElementById('stat_lbl_ok').innerText = t.s_ok; document.getElementById('stat_lbl_time').innerText = t.s_time;
+        document.getElementById('stat_lbl_ord').innerText = t.s_ord; document.getElementById('stat_lbl_rev').innerText = t.s_rev;
+        document.getElementById('stat_lbl_mat').innerText = t.s_mat; document.getElementById('stat_lbl_ele').innerText = t.s_ele;
+        document.getElementById('stat_lbl_other').innerText = t.s_oth; document.getElementById('stat_lbl_profit').innerText = t.s_prof;
+        document.getElementById('search_input').placeholder = t.search;
     }
 
     function setStatus(s) {
@@ -286,40 +262,248 @@
         document.getElementById('st_ok').classList.toggle('active', s === 'ok');
     }
 
-    function toggleTheme() {
-        document.body.classList.toggle('light-theme');
-        const isLight = document.body.classList.contains('light-theme');
-        document.getElementById('btn_theme').innerText = isLight ? '☀️' : '🌙';
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('live-clock').innerText = now.toLocaleTimeString('sk-SK');
+        document.getElementById('live-date').innerText = now.toLocaleDateString('sk-SK', {weekday:'long', day:'2-digit', month:'long'});
+    }
+    setInterval(updateClock, 1000); updateClock();
+
+    async function handleCloud(action) {
+        const pass = prompt("Heslo / Password:");
+        if(!pass) return;
+        const btn = document.getElementById(action === 'backup' ? 'btn_backup' : 'btn_restore');
+        const origText = btn.innerText; btn.innerText = "⏳...";
+        try {
+            if(action === 'backup') {
+                await fetch(CLOUD_URL, {method:'POST', mode:'no-cors', body: JSON.stringify({pass, data: items})});
+                alert("Zálohované / Backed up!");
+            } else {
+                const res = await fetch(`${CLOUD_URL}?pass=${encodeURIComponent(pass)}`);
+                const data = await res.json();
+                if (data.error) alert("Chyba / Error: " + data.error); 
+                else { items = Array.isArray(data) ? data : (data.data || []); refreshUI(); alert("Obnovené / Restored!"); }
+            }
+        } catch(e) { alert("Chyba spojenia / Connection error!"); }
+        btn.innerText = origText;
     }
 
-    function filterJobs() {
-        const query = document.getElementById('search_box').value.toLowerCase();
-        const cards = document.querySelectorAll('.job-card');
-        cards.forEach(card => {
-            const name = card.querySelector('.job-name').innerText.toLowerCase();
-            card.style.display = name.includes(query) ? 'flex' : 'none';
+    function updatePreview(auto = true) {
+        const w = parseFloat(document.getElementById('in_w').value) || 0;
+        const c = parseInt(document.getElementById('in_count').value) || 1;
+        const h = parseFloat(document.getElementById('in_h').value) || 0;
+        const m = parseFloat(document.getElementById('in_m').value) || 0;
+        const p = parseFloat(document.getElementById('in_price_per').value) || 0;
+        const f = parseFloat(document.getElementById('cfg_fil').value) || 19;
+        const e = parseFloat(document.getElementById('cfg_ele').value) || 0.19;
+
+        const totalW = w * c, totalMins = (h * 60 + m) * c;
+        const matC = (totalW / 1000) * f, eleC = (totalMins / 60) * 0.12 * e;
+
+        if(auto) document.getElementById('view_total_cost').value = (matC + eleC).toFixed(2);
+        const cost = parseFloat(document.getElementById('view_total_cost').value) || 0;
+        document.getElementById('view_total_w').innerText = totalW.toFixed(0) + " g";
+        document.getElementById('view_total_profit').innerText = (p * c - cost).toFixed(2) + " €";
+        
+        return { totalW, totalMins, matC, eleC, cost, totalSell: p * c, w, h, m, p };
+    }
+
+    ['in_w', 'in_count', 'in_h', 'in_m', 'in_price_per', 'cfg_fil', 'cfg_ele'].forEach(id => {
+        document.getElementById(id).addEventListener('input', () => updatePreview(true));
+    });
+
+    function saveItem() {
+        const calc = updatePreview(false);
+        const cnt = parseInt(document.getElementById('in_count').value) || 1;
+        
+        const newItem = {
+            id: editingId || Date.now(), type: 'print', status: currentStatus,
+            name: document.getElementById('in_name').value || (currentLang==='sk'?"Bez názvu":"Untitled"),
+            sell: Number(calc.totalSell), cost: Number(calc.cost), matCost: Number(calc.matC), eleCost: Number(calc.eleC),
+            profit: Number(calc.totalSell - calc.cost), totalW: Number(calc.totalW), mins: Number(calc.totalMins),
+            weight: Number(calc.w), h: Number(calc.h), m: Number(calc.m), pricePer: Number(calc.p),
+            costPer: Number(calc.cost / cnt), count: cnt, date: new Date().toLocaleString('sk-SK')
+        };
+
+        if(editingId) items = items.map(i => i.id === editingId ? newItem : i);
+        else items.unshift(newItem);
+        
+        clearForm(); refreshUI();
+    }
+
+    function toggleItemStatus(id) { 
+        items = items.map(i => (i.id === id) ? { ...i, status: i.status === 'ok' ? 'cp' : 'ok' } : i); 
+        refreshUI(); 
+    }
+
+    function editItem(id) {
+        const i = items.find(x => x.id === id); if(!i) return;
+        if (i.type === 'buy') {
+            const newName = prompt(currentLang==='sk'?"Upraviť názov:":"Edit name:", i.name);
+            if (newName === null) return;
+            const newValStr = prompt(currentLang==='sk'?"Suma (+ predaj, - výdavok):":"Value:", i.profit);
+            if (newValStr === null) return;
+            const v = parseFloat(newValStr.replace(',', '.'));
+            items = items.map(item => item.id === id ? { ...item, name: newName, sell: v > 0 ? v : 0, cost: v < 0 ? Math.abs(v) : 0, profit: v } : item);
+            refreshUI(); return;
+        }
+
+        if (editingId === id) { clearForm(); return; }
+        editingId = id;
+        setStatus(i.status || 'ok');
+        document.getElementById('in_name').value = i.name; 
+        document.getElementById('in_w').value = i.weight || 0;
+        document.getElementById('in_count').value = i.count || 1; 
+        document.getElementById('in_h').value = i.h || 0;
+        document.getElementById('in_m').value = i.m || 0; 
+        document.getElementById('in_price_per').value = (i.pricePer || (i.sell/i.count)).toFixed(2);
+        document.getElementById('view_total_cost').value = i.cost.toFixed(2);
+        
+        document.getElementById('btn_save').classList.add('btn-edit-mode');
+        document.getElementById('btn_cancel').style.display = "block";
+        document.getElementById('btn_other').style.display = "none";
+        
+        applyTexts(); window.scrollTo({top: 0, behavior: 'smooth'});
+        updatePreview(false); refreshUI();
+    }
+
+    function clearForm() {
+        editingId = null; setStatus('ok');
+        ['in_name','in_w','in_h','in_m','in_price_per'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('in_count').value = '1';
+        document.getElementById('btn_save').classList.remove('btn-edit-mode');
+        document.getElementById('btn_cancel').style.display = "none";
+        document.getElementById('btn_other').style.display = "block";
+        applyTexts(); updatePreview(true); refreshUI();
+    }
+
+    function duplicateItem(id) {
+        const i = items.find(x => x.id === id);
+        items.unshift({...i, id: Date.now(), date: new Date().toLocaleString('sk-SK')});
+        refreshUI();
+    }
+
+    function addOtherItem() {
+        const n = prompt(currentLang==='sk'?"Názov:":"Name:"); if(!n) return;
+        const valStr = prompt(currentLang==='sk'?"Suma (+ predaj, - výdavok):":"Value (+ sell, - expense):"); if(!valStr) return;
+        const v = parseFloat(valStr.replace(',','.')); if(isNaN(v)) return;
+        items.unshift({id:Date.now(), type:'buy', status:'ok', name:n, sell: v>0?v:0, cost: v<0?Math.abs(v):0, profit:v, date: new Date().toLocaleString('sk-SK')});
+        refreshUI();
+    }
+
+    function deleteItem(id) { if(confirm(currentLang==='sk'?"Zmazať?":"Delete?")) { items = items.filter(i => i.id !== id); if(editingId === id) clearForm(); refreshUI(); } }
+
+    function moveListItem(id, action) {
+        const idx = items.findIndex(i => i.id === id); if (idx < 0) return;
+        const item = items.splice(idx, 1)[0];
+        if (action === 'top') items.unshift(item);
+        if (action === 'bottom') items.push(item);
+        refreshUI();
+    }
+
+    // Drag & Drop
+    function handleDragStart(e, id) { e.dataTransfer.setData('text/plain', id); setTimeout(() => e.target.style.opacity = '0.5', 0); }
+    function handleDragOver(e) { e.preventDefault(); e.target.closest('.job-card')?.classList.add('drag-over'); }
+    function handleDragLeave(e) { e.target.closest('.job-card')?.classList.remove('drag-over'); }
+    function handleDrop(e, targetId) {
+        e.preventDefault(); e.target.closest('.job-card')?.classList.remove('drag-over');
+        const draggedId = Number(e.dataTransfer.getData('text/plain'));
+        if (draggedId && draggedId !== targetId) {
+            const from = items.findIndex(i => i.id === draggedId);
+            const to = items.findIndex(i => i.id === targetId);
+            const item = items.splice(from, 1)[0];
+            items.splice(to, 0, item);
+            refreshUI();
+        }
+    }
+
+    function refreshUI() {
+        localStorage.setItem('3dee_items', JSON.stringify(items));
+        const t = dict[currentLang];
+        const container = document.getElementById('list_container');
+        const query = document.getElementById('search_input').value.toLowerCase();
+        container.innerHTML = '';
+        
+        let tObrat = 0, tProfit = 0, tKg = 0, tMins = 0, tMat = 0, tEle = 0, tOther = 0, okCount = 0;
+
+        items.forEach(i => {
+            if(query && !i.name.toLowerCase().includes(query)) return;
+            const isCP = i.status === 'cp'; 
+            const isEditing = editingId === i.id;
+            const sell = Number(i.sell) || 0; 
+            const cost = Number(i.cost) || 0;
+            const profit = Number(i.profit) || (sell - cost);
+            const count = i.count || 1;
+
+            if(!isCP) {
+                tObrat += sell; tProfit += profit; okCount++;
+                if(i.type === 'print') {
+                    tKg += (Number(i.totalW) || 0); tMins += (Number(i.mins) || 0);
+                    tMat += (Number(i.matCost) || 0); tEle += (Number(i.eleCost) || 0);
+                    const baseCost = (Number(i.matCost)||0) + (Number(i.eleCost)||0);
+                    if(cost > baseCost + 0.01) tOther += (cost - baseCost);
+                } else if (profit < 0) {
+                    tOther += Math.abs(profit);
+                }
+            }
+
+            const details = i.type === 'print' ? `${(i.totalW||0).toFixed(0)}g | ${Math.floor((i.mins||0)/60)}h ${(i.mins||0)%60}m` : t.buy;
+
+            container.innerHTML += `
+                <div class="job-card type-${i.type} ${isEditing ? 'is-editing' : ''} ${isCP ? 'is-cp' : ''}" draggable="true" ondragstart="handleDragStart(event, ${i.id})" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, ${i.id})" ondragend="this.style.opacity='1'">
+                    
+                    <div class="sort-controls">
+                        <div class="sc-btn" onclick="moveListItem(${i.id}, 'top')">▲</div>
+                        <div class="sc-drag">=</div>
+                        <div class="sc-btn" onclick="moveListItem(${i.id}, 'bottom')">▼</div>
+                    </div>
+
+                    <div class="job-info">
+                        <span class="job-name">${i.name} <span class="job-tag ${isCP?'tag-cp':'tag-ok'}">${isCP?'CP':'OK'}</span></span>
+                        <div style="font-size:0.75em; color:#888; font-weight:bold;">${details}</div>
+                        <div style="font-size:0.70em; color:#666; margin-top:2px;">${i.date}</div>
+                    </div>
+                    
+                    <div class="job-data">
+                        <div class="data-item">
+                            <span class="data-label">${t.cost}</span>
+                            <span class="data-val" style="color:var(--danger)">${cost.toFixed(2)} €</span>
+                            ${i.type==='print' ? `<span class="data-sub">${count}ks (${(cost/count).toFixed(2)} €/ks)</span>` : ''}
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">${t.sell}</span>
+                            <span class="data-val" style="color:var(--primary)">${sell.toFixed(2)} €</span>
+                            ${i.type==='print' ? `<span class="data-sub">${count}ks (${(sell/count).toFixed(2)} €/ks)</span>` : ''}
+                        </div>
+                    </div>
+
+                    <div class="job-profit" style="color:${profit>=0?'var(--success)':'var(--danger)'}">
+                        <span class="profit-label">${t.profit}</span>
+                        ${profit.toFixed(2)}€
+                    </div>
+
+                    <div class="actions">
+                        <button class="action-btn ${isCP?'':'active-status'}" onclick="toggleItemStatus(${i.id})">${isCP?'CP':'OK'}</button>
+                        <button class="action-btn" onclick="duplicateItem(${i.id})">❐</button>
+                        <button class="action-btn ${isEditing ? 'is-active-edit' : ''}" onclick="editItem(${i.id})">✎</button>
+                        <button class="action-btn" onclick="deleteItem(${i.id})">🗑</button>
+                    </div>
+                </div>`;
         });
-    }
 
-    function setCurrency(c) {
-        currency = c;
-        document.getElementById('cur_eur').classList.toggle('active', c === 'EUR');
-        document.getElementById('cur_czk').classList.toggle('active', c === 'CZK');
-        updateLivePreview();
-        renderJobs();
-    }
-
-    function openInfo() {
-        document.getElementById('modal_overlay').style.display = 'block';
-        document.getElementById('info_modal').style.display = 'block';
-    }
-    function closeInfo() {
-        document.getElementById('modal_overlay').style.display = 'none';
-        document.getElementById('info_modal').style.display = 'none';
+        document.getElementById('total_kg_ever').innerText = (tKg / 1000).toFixed(2) + " kg";
+        document.getElementById('total_time_ever').innerText = `${Math.floor(tMins/60)}h ${tMins%60}m`;
+        document.getElementById('stat_count').innerText = okCount;
+        document.getElementById('stat_obrat').innerText = tObrat.toFixed(2) + " €";
+        document.getElementById('total_mat_cost').innerText = tMat.toFixed(2) + " €";
+        document.getElementById('total_ele_cost').innerText = tEle.toFixed(2) + " €";
+        document.getElementById('total_spent_other').innerText = tOther.toFixed(2) + " €";
+        document.getElementById('stat_profit').innerText = tProfit.toFixed(2) + " €";
     }
 
     // Inicializácia
-    renderJobs();
+    applyTexts();
+    refreshUI();
 </script>
 
 </body>
