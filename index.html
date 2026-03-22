@@ -43,7 +43,7 @@
         @media (min-width: 768px) { .main-layout { grid-template-columns: 340px 1fr; } }
 
         .panel { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid var(--border); transition: all 0.3s; }
-        .sticky { position: sticky; top: 15px; }
+        .sticky { position: sticky; top: 15px; z-index: 10; }
 
         label { display: block; font-size: 0.65em; color: #888; text-transform: uppercase; margin-bottom: 4px; font-weight: 600; }
         input { width: 100%; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text); padding: 10px; border-radius: 8px; box-sizing: border-box; font-size: 16px; margin-bottom: 8px; outline: none; }
@@ -82,7 +82,7 @@
 
         .search-input { width: 100%; background: var(--job-bg); border: 2px solid var(--primary); color: var(--text); padding: 12px; border-radius: 10px; font-weight: bold; box-sizing: border-box; margin-bottom: 15px; }
 
-        /* --- UPRAVENÝ RIADOK POLOŽKY (BETA LOOK) --- */
+        /* --- STÝL ZOBRAZENIA POLOŽKY Z TESTPRINT (S RESPONZIVITOU) --- */
         .job-card { 
             background: #111; 
             border: 1px solid #333; 
@@ -93,51 +93,58 @@
             overflow: hidden; 
             position: relative;
             transition: 0.2s;
-            flex-wrap: nowrap; /* BETA layout je lineárny */
+            flex-wrap: wrap; /* Umožní zalomenie na mobile */
         }
-        .job-card.is-editing { border: 2px solid var(--accent) !important; background: rgba(255, 204, 0, 0.1) !important; }
-        .job-card.is-cp { opacity: 0.7; border-style: dashed; }
+        .job-card.is-editing { border: 2px solid var(--accent) !important; background: rgba(255, 204, 0, 0.15) !important; }
+        .job-card.is-cp { opacity: 0.8; border-style: dashed; }
         
-        .type-print { border-left: none; position: relative; }
-        .type-print::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--primary); }
-        .type-buy::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--danger); }
+        .type-buy { border-left: 5px solid var(--danger); }
+        .type-print { border-left: 5px solid var(--primary); }
 
-        .sort-controls { display: flex; flex-direction: column; align-items: center; padding: 0 12px; color: #444; border-right: 1px solid #222; }
-        .sc-drag { font-weight: bold; font-size: 1.2em; cursor: grab; user-select: none; }
+        .job-card[draggable="true"] { cursor: grab; }
+        .job-card[draggable="true"]:active { cursor: grabbing; opacity: 0.8; }
+        .drag-over { border-top: 3px solid var(--primary) !important; margin-top: 15px; }
 
-        .job-info { padding: 12px 15px; flex: 1.5; min-width: 140px; }
-        .job-name { font-weight: 800; font-size: 1.25em; display: block; color: #fff; text-transform: lowercase; }
-        .job-specs { color: #888; font-size: 0.85em; font-weight: bold; margin-top: 2px; }
-        .job-date { color: #444; font-size: 0.7em; margin-top: 2px; }
+        .sort-controls { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px; border-right: 1px solid var(--border); }
+        .sc-btn { font-size: 0.9em; cursor: pointer; color: #888; transition: 0.2s; user-select: none; }
+        .sc-btn:hover { color: var(--text); }
+        .sc-drag { font-weight: bold; font-size: 1.3em; cursor: grab; padding: 2px; }
 
-        .job-data { display: flex; gap: 20px; padding: 0 20px; border-right: 1px solid #222; align-items: center; justify-content: flex-end; }
-        .data-item { text-align: center; min-width: 85px; }
-        .data-label { font-size: 0.55em; color: #666; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 2px; }
-        .data-val { font-size: 1.1em; font-weight: 900; white-space: nowrap; }
+        .job-info { flex: 1 1 150px; padding: 10px; min-width: 140px; }
+        .job-name { font-weight: bold; display: block; font-size: 1.1em; margin-bottom: 4px; }
+        .job-tag { font-size: 0.6em; padding: 2px 5px; border-radius: 4px; margin-left: 5px; vertical-align: middle; }
+        .tag-cp { background: #666; color: #fff; }
+        .tag-ok { background: var(--success); color: #000; }
+
+        .job-data { display: flex; gap: 15px; text-align: right; flex: 1 1 150px; justify-content: flex-end; padding: 10px; }
+        .data-item { display: flex; flex-direction: column; min-width: 85px; }
+        .data-label { font-size: 0.65em; color: #888; text-transform: uppercase; font-weight: bold; }
+        .data-val { font-size: 1.05em; font-weight: bold; white-space: nowrap; }
+        .data-sub { font-size: 0.65em; color: #888; margin-top: 2px; }
+
+        .job-profit { flex: 1 1 100px; text-align: right; font-weight: 900; font-size: 1.3em; border-left: 1px solid var(--border); padding: 10px 15px; display: flex; flex-direction: column; justify-content: center; }
+        .profit-label { font-size: 0.45em; display: block; color: #888; text-transform: uppercase; margin-bottom: 4px; }
         
-        .val-cost { color: #ff3e3e; }
-        .val-sell { color: #00a2ff; }
-
-        .job-profit { min-width: 100px; text-align: right; padding: 0 20px; }
-        .profit-val { font-size: 1.4em; font-weight: 900; color: #00ff88; }
-        
-        .actions { display: flex; gap: 6px; padding: 0 15px; }
-        .action-btn { 
-            background: #1a1a1a; border: 1px solid #333; color: #888; 
-            width: 34px; height: 34px; border-radius: 8px; cursor: pointer; 
-            display: flex; align-items: center; justify-content: center;
-            transition: 0.2s;
-        }
-        .action-btn:hover { background: #222; color: #fff; }
-        .action-btn.active-status { background: #00ff88 !important; color: #000 !important; font-weight: bold; border-color: #00ff88; }
-        .action-btn.is-active-edit { background: var(--accent) !important; color: #000 !important; }
+        .actions { display: flex; gap: 5px; padding: 10px; flex-wrap: wrap; justify-content: flex-end; }
+        .action-btn { background: var(--btn-bg); border: 1px solid var(--border); color: #888; cursor: pointer; padding: 8px; border-radius: 6px; transition: 0.3s; }
+        .action-btn:hover { color: var(--text); }
+        .action-btn.active-status { background: var(--success); color: #000; border-color: var(--success); }
+        .action-btn.is-active-edit { background: var(--accent) !important; color: #000 !important; border-color: var(--accent); box-shadow: 0 0 12px var(--accent); animation: pulse-edit 1.5s infinite; }
 
         @keyframes pulse-edit { 0% { box-shadow: 0 0 5px var(--accent); } 50% { box-shadow: 0 0 18px var(--accent); } 100% { box-shadow: 0 0 5px var(--accent); } }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; backdrop-filter: blur(3px); }
         .modal-content { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card); padding: 25px; border: 2px solid var(--primary); z-index: 1000; border-radius: 15px; width: 90%; max-width: 400px; }
         .btn-modal-close { background: var(--primary); color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; margin-top: 15px; cursor: pointer; font-weight: bold; }
-        #info_text_content b { color: var(--primary); }
+        
+        /* Mobile fixes for the job item */
+        @media (max-width: 768px) {
+            .job-card { flex-direction: column; align-items: stretch; }
+            .sort-controls { flex-direction: row; justify-content: center; border-right: none; border-bottom: 1px solid #222; padding: 5px; }
+            .job-data { justify-content: space-between; border-right: none; border-bottom: 1px solid #222; }
+            .job-profit { border-left: none; text-align: center; border-bottom: 1px solid #222; }
+            .actions { justify-content: center; }
+        }
     </style>
 </head>
 <body>
@@ -516,7 +523,32 @@
         refreshUI();
     }
 
-    /* --- UPRAVENÁ FUNKCIA PRE ZOBRAZENIE POLOŽIEK (BETA + PREPOČET MENY) --- */
+    // --- DRAG AND DROP ---
+    function moveListItem(id, action) {
+        const idx = items.findIndex(i => i.id === id); if (idx < 0) return;
+        const item = items.splice(idx, 1)[0];
+        if (action === 'top') items.unshift(item); else items.push(item);
+        refreshUI();
+    }
+    function handleDragStart(e, id) { e.dataTransfer.setData('text/plain', id); e.dataTransfer.effectAllowed = 'move'; setTimeout(() => e.target.style.opacity = '0.5', 0); }
+    function handleDragOver(e) { e.preventDefault(); e.target.closest('.job-card')?.classList.add('drag-over'); }
+    function handleDragLeave(e) { e.target.closest('.job-card')?.classList.remove('drag-over'); }
+    function handleDrop(e, targetId) {
+        e.preventDefault(); e.target.closest('.job-card')?.classList.remove('drag-over');
+        const draggedId = Number(e.dataTransfer.getData('text/plain'));
+        if (draggedId && draggedId !== targetId) {
+            const from = items.findIndex(i => i.id === draggedId);
+            const to = items.findIndex(i => i.id === targetId);
+            if (from >= 0 && to >= 0) {
+                const item = items.splice(from, 1)[0];
+                items.splice(to, 0, item);
+                refreshUI();
+            }
+        }
+    }
+    function handleDragEnd(e) { e.target.style.opacity = '1'; document.querySelectorAll('.job-card').forEach(c => c.classList.remove('drag-over')); }
+
+    /* --- FUNKCIA PRE ZOBRAZENIE POLOŽIEK S NOVÝM VIZUÁLOM --- */
     function refreshUI() {
         const container = document.getElementById('list_container');
         const query = document.getElementById('search_input').value.toLowerCase();
@@ -529,7 +561,6 @@
         items.forEach(i => {
             const isMatch = i.name.toLowerCase().includes(query);
             
-            // PREPOČET HODNÔT PRE ZOBRAZENIE PODĽA AKTUÁLNEJ MENY
             let dCost = i.cost;
             let dSell = i.sell;
             let dProfit = i.profit;
@@ -544,7 +575,6 @@
                 s_rev += dSell; s_prof += dProfit;
                 if(i.type === 'print') {
                     s_kg += (i.totalW || 0); s_time += (i.mins || 0); s_ord++;
-                    // Súčet nákladov spracujeme v aktuálnej mene
                     if(i.currency === currentCurr) {
                         s_mat += (i.matCost || 0); s_ele += (i.eleCost || 0);
                     } else if(currentCurr === 'CZK') {
@@ -556,38 +586,57 @@
             }
             if(!isMatch) return;
 
-            // HTML RIADKU (BETA LAYOUT)
+            const isEditing = editingId === i.id;
+            const isCP = i.status === 'cp';
+            const details = i.type === 'print' ? `${(i.totalW||0).toFixed(0)}g | ${Math.floor((i.mins||0)/60)}h ${(i.mins||0)%60}m` : t.buy;
+            const costPer = (dCost / (i.count || 1)).toFixed(2); 
+            const sellPer = (dSell / (i.count || 1)).toFixed(2);
+
             const card = document.createElement('div');
-            card.className = `job-card type-${i.type} ${editingId===i.id?'is-editing':''} ${i.status==='cp'?'is-cp':''}`;
+            card.className = `job-card type-${i.type} ${isEditing ? 'is-editing' : ''} ${isCP ? 'is-cp' : ''}`;
+            card.draggable = true;
+            card.ondragstart = (e) => handleDragStart(e, i.id);
+            card.ondragover = handleDragOver;
+            card.ondragleave = handleDragLeave;
+            card.ondrop = (e) => handleDrop(e, i.id);
+            card.ondragend = handleDragEnd;
             
             card.innerHTML = `
                 <div class="sort-controls">
-                    <span class="sc-drag">＝</span>
+                    <div class="sc-btn" title="Hore" onclick="moveListItem(${i.id}, 'top')">▲</div>
+                    <div class="sc-btn sc-drag" title="Chyť a potiahni">=</div>
+                    <div class="sc-btn" title="Dole" onclick="moveListItem(${i.id}, 'bottom')">▼</div>
                 </div>
+
                 <div class="job-info">
-                    <span class="job-name">${i.name}</span>
-                    <div class="job-specs">${i.type==='print' ? (i.count+'ks | '+i.weight+'g | '+i.h+'h '+i.m+'m') : t.buy}</div>
-                    <div class="job-date">${i.date}</div>
+                    <span class="job-name">${i.name} <span class="job-tag ${isCP?'tag-cp':'tag-ok'}">${isCP?'CP':'OK'}</span></span>
+                    <div style="font-size:0.75em; color:#888; font-weight:bold; margin-top:2px;">${details}</div>
+                    <div style="font-size:0.70em; color:#666; margin-top:2px;">${i.date}</div>
                 </div>
+                
                 <div class="job-data">
                     <div class="data-item">
                         <span class="data-label">${t.cost}</span>
-                        <span class="data-val val-cost">${dCost.toFixed(2)} ${sym}</span>
+                        <span class="data-val" style="color:var(--danger)">${dCost.toFixed(2)} ${sym}</span>
+                        ${i.type==='print' ? `<span class="data-sub">${i.count}ks (${costPer} ${sym}/ks)</span>` : ''}
                     </div>
                     <div class="data-item">
                         <span class="data-label">${t.sell}</span>
-                        <span class="data-val val-sell">${dSell.toFixed(2)} ${sym}</span>
+                        <span class="data-val" style="color:var(--primary)">${dSell.toFixed(2)} ${sym}</span>
+                        ${i.type==='print' ? `<span class="data-sub">${i.count}ks (${sellPer} ${sym}/ks)</span>` : ''}
                     </div>
                 </div>
+
                 <div class="job-profit">
-                    <span class="data-label">${t.profit}</span>
-                    <span class="profit-val">${dProfit.toFixed(2)} ${sym}</span>
+                    <span class="profit-label">${t.profit}</span>
+                    <span style="color:${dProfit>=0?'var(--success)':'var(--danger)'}">${dProfit.toFixed(2)}${sym}</span>
                 </div>
+
                 <div class="actions">
+                    <button class="action-btn ${isCP?'':'active-status'}" title="Prepnúť" onclick="toggleItemStatus(${i.id})">${isCP?'CP':'OK'}</button>
                     <button class="action-btn" onclick="duplicateItem(${i.id})">❐</button>
-                    <button class="action-btn ${editingId===i.id?'is-active-edit':''}" onclick="editItem(${i.id})">✎</button>
+                    <button class="action-btn ${isEditing ? 'is-active-edit' : ''}" onclick="editItem(${i.id})">✎</button>
                     <button class="action-btn" onclick="deleteItem(${i.id})">🗑</button>
-                    <button class="action-btn ${i.status==='ok'?'active-status':''}" onclick="toggleItemStatus(${i.id})">✓</button>
                 </div>
             `;
             container.appendChild(card);
