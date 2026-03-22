@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>3Dee Pro - Cloud Edition</title>
+    <style>
+        :root {
+            --bg: #0a0a0a; --card: #161616; --text: #ffffff;
+            --primary: #00a2ff; --accent: #ffcc00; --danger: #ff3e3e; --success: #00ff88;
+            --border: #333;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); padding: 10px; margin: 0; }
+        
+        .header { width: 100%; max-width: 1200px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 12px; margin: 0 auto 15px auto; gap: 10px; }
+        .config-bar { background: #001a33; padding: 10px; border-radius: 10px; display: flex; gap: 12px; border: 1px solid var(--primary); width: 100%; justify-content: space-around; }
+        .config-input { background: #000; border: 1px solid var(--primary); color: var(--primary); font-weight: bold; text-align: center; border-radius: 4px; padding: 3px; width: 60px; }
+        
+        @media (min-width: 768px) {
+            .config-bar { width: auto; }
+            .main-layout { display: grid; grid-template-columns: 340px 1fr; gap: 20px; }
+        }
+
+        .main-layout { width: 100%; max-width: 1200px; margin: 0 auto; }
+        .panel { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .sticky { position: sticky; top: 15px; }
+
+        label { display: block; font-size: 0.65em; color: #aaa; text-transform: uppercase; margin-bottom: 4px; font-weight: 600; }
+        input { width: 100%; background: #000; border: 1px solid #444; color: white; padding: 10px; border-radius: 8px; box-sizing: border-box; font-size: 16px; margin-bottom: 8px; outline: none; transition: border-color 0.2s; }
+        input:focus { border-color: var(--primary); }
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        .calc-preview { background: #1a1500; padding: 12px; border-radius: 10px; margin: 10px 0; border: 1px solid var(--accent); color: var(--accent); font-size: 0.9em; }
+        .line { display: flex; justify-content: space-between; font-weight: bold; }
+
+        .btn-add { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: transform 0.1s; }
+        .btn-add:active { transform: scale(0.98); }
+        .btn-edit-active { background: var(--accent); color: #000; }
+        .btn-buy { background: transparent; color: var(--danger); border: 1px solid var(--danger); padding: 8px; width: 100%; border-radius: 10px; font-weight: bold; margin-top: 15px; cursor: pointer; transition: background 0.2s; }
+
+        /* CLOUD ZONE */
+        .cloud-zone { display: flex; gap: 10px; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px; }
+        .btn-cloud { flex: 1; background: #0a1f33; border: 1px solid var(--primary); color: var(--primary); padding: 10px; border-radius: 8px; font-size: 0.8em; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .btn-cloud:hover { background: var(--primary); color: white; }
+
+        .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
+        @media (min-width: 900px) { .summary-grid { grid-template-columns: repeat(3, 1fr); } }
+        
+        .stat-card { background: #111; padding: 12px; border-radius: 12px; border: 1px solid var(--border); text-align: center; }
+        .stat-label { font-size: 0.6em; color: #888; text-transform: uppercase; margin-bottom: 3px; }
+        .stat-value { font-size: 1.15em; font-weight: 900; }
+        .card-spent { color: var(--danger); border-bottom: 3px solid var(--danger); }
+        .card-profit { border: 2px solid var(--success); background: #001a0d; color: var(--success); }
+
+        .search-input { border: 2px solid var(--primary); background: #000; padding: 12px; margin-bottom: 15px; font-weight: bold; width: 100%; box-sizing: border-box; }
+        
+        .job-card { background: #1a1a1a; padding: 10px 15px; border-radius: 8px; margin-bottom: 6px; border: 1px solid #333; display: flex; align-items: center; gap: 15px; justify-content: space-between; }
+        .job-card.type-purchase { border-left: 5px solid var(--danger); background: #1a0a0a; }
+        .job-card.type-print { border-left: 5px solid var(--primary); }
+
+        .job-info { flex-grow: 1; min-width: 0; }
+        .job-name { font-weight: bold; font-size: 0.95em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+        .job-date { font-size: 0.75em; color: #555; }
+
+        .job-data { display: flex; gap: 12px; font-size: 0.85em; font-weight: 600; text-align: center; }
+        .data-item { display: flex; flex-direction: column; min-width: 55px; }
+        .data-label { font-size: 0.55em; color: #555; text-transform: uppercase; margin-bottom: 2px; }
+
+        .job-profit { min-width: 75px; text-align: right; font-weight: 900; font-size: 1.1em; }
+        
+        .actions { display: flex; gap: 6px; }
+        .action-btn { background: #222; border: 1px solid #444; color: #aaa; cursor: pointer; padding: 6px; border-radius: 4px; font-size: 0.9em; transition: 0.2s; }
+        .btn-edit:hover { color: var(--accent); border-color: var(--accent); }
+        .btn-del:hover { color: var(--danger); border-color: var(--danger); }
+
+        @media (max-width: 850px) {
+            .job-card { flex-wrap: wrap; height: auto; }
+            .job-data { width: 100%; justify-content: space-between; margin-top: 8px; border-top: 1px solid #222; padding-top: 8px; }
+            .actions { width: 100%; justify-content: flex-end; margin-top: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1 style="margin:0; font-size:1.4em; color:var(--primary);">3Dee <span style="color:#fff">PRO</span></h1>
+    <div class="config-bar">
+        <div><label>€/KG</label><input type="number" id="cfg_fil" value="19" class="config-input" step="any"></div>
+        <div><label>€/KWH</label><input type="number" id="cfg_ele" value="0.19" class="config-input" step="any"></div>
+    </div>
+</div>
+
+<div class="main-layout">
+    <div class="side-panels">
+        <div class="panel sticky">
+            <h2 id="form_title" style="color:var(--primary); font-size: 1.1em; margin-bottom: 15px;">✚ NOVÁ TLAČ</h2>
+            <label>Názov Projektu</label>
+            <input type="text" id="in_name" placeholder="Názov...">
+            
+            <div class="row">
+                <div><label>Váha/ks (g)</label><input type="number" id="in_w" step="any"></div>
+                <div><label>Počet ks</label><input type="number" id="in_count" value="1" step="1"></div>
+            </div>
+            
+            <div class="row">
+                <div><label>Hodiny</label><input type="number" id="in_h" step="1"></div>
+                <div><label>Minúty</label><input type="number" id="in_m" step="1"></div>
+            </div>
+            
+            <label>Predajná cena / 1 ks (€)</label>
+            <input type="number" id="in_price_per" step="any">
+            
+            <div class="calc-preview">
+                <div class="line"><span>MATERIÁL:</span> <span id="view_total_w">0 g</span></div>
+                <div class="line" style="font-size: 1.1em"><span>ZISK:</span> <span id="view_total_profit">0.00 €</span></div>
+            </div>
+            
+            <button class="btn-add" id="btn_save" onclick="saveItem()">ULOŽIŤ DO HISTÓRIE</button>
+            <button id="btn_cancel" onclick="cancelEdit()" style="display:none; background:none; border:none; color:#777; width:100%; margin-top:10px; cursor:pointer; font-size:0.8em">Zrušiť úpravu</button>
+            
+            <button class="btn-buy" onclick="addPurchase()">🛒 PRIDAŤ NÁKUP FILAMENTU</button>
+
+            <div class="cloud-zone">
+                <button class="btn-cloud" id="btn_backup" onclick="backupData()">☁️ Zálohovať</button>
+                <button class="btn-cloud" id="btn_restore" onclick="restoreData()">⬇️ Obnoviť</button>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="summary-grid">
+            <div class="stat-card"><div class="stat-label">Vytlačené</div><div class="stat-value" id="total_kg_ever">0.00 kg</div></div>
+            <div class="stat-card"><div class="stat-label">Čas Tlače</div><div class="stat-value" id="total_time_ever">0h 0m</div></div>
+            <div class="stat-card card-spent"><div class="stat-label">Investície</div><div class="stat-value" id="total_spent_mat">0.00 €</div></div>
+            <div class="stat-card"><div class="stat-label">Zákazky</div><div class="stat-value" id="stat_count">0</div></div>
+            <div class="stat-card"><div class="stat-label">Celkový Obrat</div><div class="stat-value" id="stat_obrat">0.00 €</div></div>
+            <div class="stat-card card-profit"><div class="stat-label" style="color:var(--success)">Čistý Zisk</div><div class="stat-value" id="stat_profit">0.00 €</div></div>
+        </div>
+
+        <input type="text" id="search_input" class="search-input" placeholder="🔍 Vyhľadať v histórii..." oninput="refreshUI()">
+
+        <div id="list_container"></div>
+    </div>
+</div>
+
+<script>
+    // TVOJ LINK JE ÚSPEŠNE INTEGROVANÝ
+    const CLOUD_URL = "https://script.google.com/macros/s/AKfycbx-NoHXuzfx7EVN1ZeY2W4nUmj6RS1JKZylLEabzdFueGmgpAiBPWgOZiNxfHxRjaHN/exec";
+
+    const WATT_USAGE = 0.12; 
+    let items = JSON.parse(localStorage.getItem('3dee_final_data')) || [];
+    let editingId = null;
+
+    const inputs = ['in_w', 'in_count', 'in_h', 'in_m', 'in_price_per', 'cfg_fil', 'cfg_ele'];
+    inputs.forEach(id => document.getElementById(id).addEventListener('input', updatePreview));
+
+    function updatePreview() {
+        const w1 = parseFloat(document.getElementById('in_w').value) || 0;
+        const count = parseInt(document.getElementById('in_count').value) || 1;
+        const h1 = parseFloat(document.getElementById('in_h').value) || 0;
+        const m1 = parseFloat(document.getElementById('in_m').value) || 0;
+        const pricePer = parseFloat(document.getElementById('in_price_per').value) || 0;
+        const fPrice = parseFloat(document.getElementById('cfg_fil').value) || 0;
+        const ePrice = parseFloat(document.getElementById('cfg_ele').value) || 0;
+
+        const totalW = w1 * count;
+        const totalMins = (h1 * 60 + m1) * count;
+        const totalCost = ((totalW / 1000) * fPrice) + ((totalMins / 60) * WATT_USAGE * ePrice);
+        const totalSell = pricePer * count;
+        const totalProfit = totalSell - totalCost;
+
+        document.getElementById('view_total_w').innerText = totalW.toFixed(1) + " g";
+        document.getElementById('view_total_profit').innerText = totalProfit.toFixed(2) + " €";
+        return { totalCost, totalW, totalMins, count, totalSell, totalProfit, w1, h1, m1, pricePer };
+    }
+
+    function saveItem() {
+        const name = document.getElementById('in_name').value.trim();
+        if(!name || !document.getElementById('in_w').value) return alert("Doplň názov a váhu!");
+        const c = updatePreview();
+        const dateStr = editingId ? items.find(i=>i.id===editingId).date : new Date().toLocaleString('sk-SK', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+        const newItem = { id: editingId || Date.now(), type: 'print', name: name, sell: c.totalSell, totalW: c.totalW, mins: c.totalMins, cost: c.totalCost, profit: c.totalProfit, count: c.count, weight: c.w1, h: c.h1, m: c.m1, pPer: c.pricePer, date: dateStr };
+        if(editingId) items = items.map(i => i.id === editingId ? newItem : i); else items.unshift(newItem);
+        localStorage.setItem('3dee_final_data', JSON.stringify(items));
+        cancelEdit(); refreshUI();
+    }
+
+    function editItem(id) {
+        const i = items.find(item => item.id === id); if(i.type === 'buy') return;
+        editingId = id;
+        document.getElementById('in_name').value = i.name; document.getElementById('in_w').value = i.weight;
+        document.getElementById('in_count').value = i.count; document.getElementById('in_h').value = i.h;
+        document.getElementById('in_m').value = i.m; document.getElementById('in_price_per').value = i.pPer;
+        document.getElementById('form_title').innerText = "✎ UPRAVIŤ TLAČ";
+        document.getElementById('btn_save').innerText = "ULOŽIŤ ZMENY";
+        document.getElementById('btn_save').classList.add('btn-edit-active');
+        document.getElementById('btn_cancel').style.display = "block";
+        window.scrollTo({top: 0, behavior: 'smooth'}); updatePreview();
+    }
+
+    function cancelEdit() {
+        editingId = null;
+        document.getElementById('in_name').value = ''; document.getElementById('in_w').value = '';
+        document.getElementById('in_count').value = '1'; document.getElementById('in_h').value = '';
+        document.getElementById('in_m').value = ''; document.getElementById('in_price_per').value = '';
+        document.getElementById('form_title').innerText = "✚ NOVÁ TLAČ";
+        document.getElementById('btn_save').innerText = "ULOŽIŤ DO HISTÓRIE";
+        document.getElementById('btn_save').classList.remove('btn-edit-active');
+        document.getElementById('btn_cancel').style.display = "none";
+        updatePreview();
+    }
+
+    function addPurchase() {
+        const pStr = prompt("Cena nákupu v €:"); if(!pStr) return;
+        const wStr = prompt("Váha v kg:"); if(!wStr) return;
+        const price = parseFloat(pStr.replace(',', '.'));
+        const weight = parseFloat(wStr.replace(',', '.'));
+        if(isNaN(price) || isNaN(weight)) return alert("Zadal si neplatné číslo!");
+        items.unshift({ id: Date.now(), type: 'buy', name: `Nákup Filamentu (${weight}kg)`, sell: 0, cost: price, profit: -price, count: weight, date: new Date().toLocaleString('sk-SK', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}) });
+        localStorage.setItem('3dee_final_data', JSON.stringify(items));
+        refreshUI();
+    }
+
+    function deleteItem(id) {
+        if(confirm("Naozaj chceš vymazať túto položku?")) {
+            items = items.filter(i => i.id !== id);
+            localStorage.setItem('3dee_final_data', JSON.stringify(items));
+            refreshUI();
+        }
+    }
+
+    async function backupData() {
+        const btn = document.getElementById('btn_backup');
+        btn.innerText = "⏳ Čakaj...";
+        try {
+            await fetch(CLOUD_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(items) });
+            alert("✅ Záloha úspešná! Dáta sú v Google Tabuľke.");
+        } catch(e) {
+            alert("❌ Chyba! Skontroluj internet.");
+        }
+        btn.innerText = "☁️ Zálohovať";
+    }
+
+    async function restoreData() {
+        if(!confirm("⚠️ UPOZORNENIE: Toto vymaže aktuálne dáta na tejto obrazovke a stiahne poslednú zálohu z Cloudu. Pokračovať?")) return;
+        const btn = document.getElementById('btn_restore');
+        btn.innerText = "⏳ Sťahujem...";
+        try {
+            const res = await fetch(CLOUD_URL);
+            const data = await res.json();
+            if(data && Array.isArray(data)) {
+                items = data;
+                localStorage.setItem('3dee_final_data', JSON.stringify(items));
+                refreshUI();
+                alert("✅ Dáta z Cloudu boli úspešne stiahnuté!");
+            }
+        } catch(e) {
+            alert("❌ Chyba pri sťahovaní dát!");
+        }
+        btn.innerText = "⬇️ Obnoviť";
+    }
+
+    function refreshUI() {
+        const container = document.getElementById('list_container');
+        const query = document.getElementById('search_input').value.toLowerCase();
+        container.innerHTML = '';
+        let tObrat = 0, tProfit = 0, vCount = 0, tKg = 0, tMins = 0, tSpentBuy = 0;
+        items.forEach(i => {
+            if(!i.name.toLowerCase().includes(query) && !i.date.toLowerCase().includes(query)) return;
+            vCount++; tObrat += i.sell; tProfit += i.profit;
+            if(i.type === 'print') { tKg += i.totalW; tMins += i.mins; } else { tSpentBuy += i.cost; }
+            const div = document.createElement('div');
+            div.className = `job-card type-${i.type}`;
+            div.innerHTML = `
+                <div class="job-info">
+                    <span class="job-name">${i.name}</span>
+                    <span class="job-date">${i.date}</span>
+                </div>
+                <div class="job-data">
+                    <div class="data-item"><span class="data-label">Ks</span>${i.count}${i.type==='print'?'ks':'kg'}</div>
+                    <div class="data-item"><span class="data-label">Váha/Čas</span>${i.type==='print'? i.totalW.toFixed(0)+'g | '+Math.floor(i.mins/60)+'h': 'Sklad'}</div>
+                    <div class="data-item"><span class="data-label">Predaj</span><span style="color:var(--primary)">${i.sell > 0 ? i.sell.toFixed(2) + '€' : '-'}</span></div>
+                    <div class="data-item"><span class="data-label">Náklad</span><span style="color:var(--danger)">${i.cost.toFixed(2)}€</span></div>
+                </div>
+                <div class="job-profit ${i.profit>=0?'profit-pos':'profit-neg'}">${i.profit.toFixed(2)}€</div>
+                <div class="actions">
+                    ${i.type === 'print' ? `<button class="action-btn btn-edit" onclick="editItem(${i.id})">✎</button>` : ''}
+                    <button class="action-btn btn-del" onclick="deleteItem(${i.id})">🗑</button>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+        document.getElementById('stat_count').innerText = vCount;
+        document.getElementById('stat_obrat').innerText = tObrat.toFixed(2) + " €";
+        document.getElementById('stat_profit').innerText = tProfit.toFixed(2) + " €";
+        document.getElementById('total_kg_ever').innerText = (tKg / 1000).toFixed(2) + " kg";
+        document.getElementById('total_time_ever').innerText = Math.floor(tMins/60) + "h " + (tMins%60) + "m";
+        document.getElementById('total_spent_mat').innerText = tSpentBuy.toFixed(2) + " €";
+    }
+    refreshUI();
+</script>
+</body>
+</html>
