@@ -6,7 +6,6 @@
     <title>3Dee Pro - Cloud & Business</title>
     <style>
         :root {
-            /* DARK MODE (Default) */
             --bg: #0a0a0a; --card: #161616; --text: #ffffff;
             --primary: #00a2ff; --accent: #ffcc00; --danger: #ff3e3e; --success: #00ff88;
             --border: #333; --cp-color: #aaa; --input-bg: #000; --input-border: #444;
@@ -14,7 +13,6 @@
         }
 
         .light-theme {
-            /* LIGHT MODE */
             --bg: #f4f5f7; --card: #ffffff; --text: #111111;
             --primary: #0066cc; --accent: #e6b800; --danger: #cc0000; --success: #009944;
             --border: #cccccc; --cp-color: #777777; --input-bg: #ffffff; --input-border: #bbbbbb;
@@ -23,9 +21,8 @@
 
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); padding: 10px; margin: 0; transition: background 0.3s, color 0.3s; }
         
-        /* USER INFO (Top Left) & TOTAL USERS (Bottom Left) */
-        #user_display { font-size: 0.8em; color: var(--success); font-weight: bold; margin-bottom: 5px; text-transform: uppercase; }
-        #total_users_display { position: fixed; bottom: 5px; left: 10px; font-size: 0.65em; color: #666; font-weight: bold; z-index: 100; }
+        #user_display { font-size: 0.8em; color: var(--success); font-weight: bold; margin-bottom: 5px; text-transform: uppercase; min-height: 1.2em; }
+        #total_users_display { position: fixed; bottom: 5px; left: 10px; font-size: 0.7em; color: #888; font-weight: bold; z-index: 100; background: var(--bg); padding: 2px 5px; border-radius: 4px; }
 
         .header { width: 100%; max-width: 1200px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 12px; margin: 0 auto 15px auto; gap: 10px; }
         .header-center { flex-grow: 1; text-align: center; }
@@ -36,21 +33,20 @@
         .config-input { background: var(--input-bg); border: 1px solid var(--primary); color: var(--primary); font-weight: bold; text-align: center; border-radius: 4px; padding: 5px; width: 60px; }
         .btn-toggle { background: var(--btn-bg); color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 5px 10px; font-weight: bold; cursor: pointer; transition: 0.2s; height: 30px; display: flex; align-items: center; justify-content: center;}
         .btn-info { background: transparent; color: var(--primary); border: 1px solid var(--primary); border-radius: 5px; padding: 2px 8px; font-size: 0.9em; cursor: pointer; font-weight: bold; transition: 0.3s;}
-        .btn-info:hover { background: var(--primary); color: #000; }
 
         .main-layout { width: 100%; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 20px; }
         @media (min-width: 768px) { .main-layout { grid-template-columns: 340px 1fr; } }
 
-        .panel { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid var(--border); transition: all 0.3s; }
+        .panel { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid var(--border); }
         .sticky { position: sticky; top: 15px; }
 
         label { display: block; font-size: 0.65em; color: #888; text-transform: uppercase; margin-bottom: 4px; font-weight: 600; }
-        input { width: 100%; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text); padding: 10px; border-radius: 8px; box-sizing: border-box; font-size: 16px; margin-bottom: 8px; outline: none; transition: 0.3s; }
+        input { width: 100%; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text); padding: 10px; border-radius: 8px; box-sizing: border-box; font-size: 16px; margin-bottom: 8px; outline: none; }
         
         .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
         .status-toggle { display: flex; background: var(--input-bg); border-radius: 8px; border: 1px solid var(--input-border); margin-bottom: 15px; overflow: hidden; }
-        .st-btn { flex: 1; padding: 10px; text-align: center; font-weight: bold; cursor: pointer; font-size: 0.8em; transition: 0.2s; color: #777; }
+        .st-btn { flex: 1; padding: 10px; text-align: center; font-weight: bold; cursor: pointer; font-size: 0.8em; color: #777; }
         .st-btn.active { color: #fff; }
         .light-theme .st-btn.active { color: #000; }
         .st-btn-cp.active { background: var(--cp-color); }
@@ -61,12 +57,20 @@
         .input-inline { background: rgba(255, 204, 0, 0.1); border: 1px solid var(--accent); color: var(--accent); padding: 4px 8px; border-radius: 4px; width: 85px; text-align: right; font-weight: bold; }
 
         .btn-add { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase; margin-top: 5px; }
-        .btn-edit-mode { background: var(--accent); color: #000; }
+        
+        /* EDIT BLIKANIE ANIMÁCIA */
+        @keyframes pulse-edit {
+            0% { box-shadow: 0 0 5px rgba(255, 204, 0, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(255, 204, 0, 0.8); border-color: rgba(255, 204, 0, 1); }
+            100% { box-shadow: 0 0 5px rgba(255, 204, 0, 0.2); }
+        }
+        .btn-edit-mode { background: var(--accent) !important; color: #000 !important; animation: pulse-edit 1.5s infinite; }
+
         .btn-buy { background: transparent; color: var(--success); border: 1px solid var(--success); padding: 8px; width: 100%; border-radius: 10px; margin-top: 10px; cursor: pointer; font-weight: bold; }
 
         .cloud-zone { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
         .cloud-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .btn-cloud { width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 0.8em; transition: 0.2s;}
+        .btn-cloud { width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 0.8em; }
         .btn-backup { background: #0044cc; color: white; }
         .btn-restore { background: var(--btn-bg); color: var(--text); border: 1px solid var(--border); }
         .btn-register { background: var(--success); color: #000; grid-column: 1 / -1; }
@@ -82,54 +86,27 @@
 
         .search-input { width: 100%; background: var(--job-bg); border: 2px solid var(--primary); color: var(--text); padding: 12px; border-radius: 10px; font-weight: bold; box-sizing: border-box; margin-bottom: 15px; }
 
-        /* JOB CARD & LAYOUT */
         .job-card { background: var(--job-bg); padding: 12px 15px; border-radius: 10px; margin-bottom: 8px; border: 1px solid var(--border); display: flex; align-items: center; gap: 15px; justify-content: space-between; flex-wrap: wrap; transition: all 0.2s ease; }
-        .job-card.is-editing { border: 2px solid var(--accent) !important; background: rgba(255, 204, 0, 0.1); box-shadow: 0 0 15px rgba(255, 204, 0, 0.2); }
-        .job-card.is-cp { border: 1px dashed var(--cp-color); opacity: 0.8; }
-        .type-buy { border-left: 5px solid var(--danger); }
-        .type-print { border-left: 5px solid var(--primary); }
-        .is-cp.type-print { border-left: 5px solid var(--cp-color); }
-
-        /* DRAG AND DROP STYLES */
-        .job-card[draggable="true"] { cursor: grab; }
-        .job-card[draggable="true"]:active { cursor: grabbing; opacity: 0.8; }
-        .drag-over { border-top: 3px solid var(--primary) !important; margin-top: 15px; }
+        .job-card.is-editing { border: 2px solid var(--accent) !important; background: rgba(255, 204, 0, 0.15); animation: pulse-edit 1.5s infinite; }
         
-        .sort-controls { display: flex; flex-direction: column; align-items: center; gap: 4px; padding-right: 10px; border-right: 1px solid var(--border); }
-        .sc-btn { font-size: 0.9em; cursor: pointer; color: #888; transition: 0.2s; user-select: none; }
-        .sc-btn:hover { color: var(--text); }
-        .sc-drag { font-weight: bold; font-size: 1.3em; cursor: grab; padding: 2px; }
-
         .job-info { flex: 2; min-width: 150px; }
-        .job-name { font-weight: bold; display: block; font-size: 1.1em; margin-bottom: 4px; }
-        .job-tag { font-size: 0.6em; padding: 2px 5px; border-radius: 4px; margin-left: 5px; vertical-align: middle; }
-        .tag-cp { background: #666; color: #fff; }
-        .tag-ok { background: var(--success); color: #000; }
-
+        .job-name { font-weight: bold; display: block; font-size: 1.1em; }
+        
         .job-data { display: flex; gap: 15px; text-align: right; flex-grow: 1; justify-content: flex-end; }
         .data-item { display: flex; flex-direction: column; min-width: 85px; }
-        .data-label { font-size: 0.65em; color: #888; text-transform: uppercase; font-weight: bold; }
-        .data-val { font-size: 1.05em; font-weight: bold; white-space: nowrap; }
-        .data-sub { font-size: 0.65em; color: #888; margin-top: 2px; }
+        .data-label { font-size: 0.65em; color: #888; text-transform: uppercase; }
+        .data-val { font-size: 1.05em; font-weight: bold; }
 
         .job-profit { min-width: 80px; text-align: right; font-weight: 900; font-size: 1.3em; border-left: 1px solid var(--border); padding-left: 15px; }
-        .profit-label { font-size: 0.45em; display: block; color: #888; text-transform: uppercase; margin-bottom: 4px; }
         
         .actions { display: flex; gap: 5px; }
-        .action-btn { background: var(--btn-bg); border: 1px solid var(--border); color: #888; cursor: pointer; padding: 8px; border-radius: 6px; transition: 0.3s; }
-        .action-btn:hover { color: var(--text); }
-        .action-btn.active-status { background: var(--success); color: #000; border-color: var(--success); }
+        .action-btn { background: var(--btn-bg); border: 1px solid var(--border); color: #888; cursor: pointer; padding: 8px; border-radius: 6px; }
 
-        /* MODAL STYLES */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; backdrop-filter: blur(3px); }
-        .modal-content { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card); padding: 25px; border: 2px solid var(--primary); z-index: 1000; border-radius: 15px; width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .modal-title { margin-top: 0; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        .modal-text { font-size: 0.9em; line-height: 1.5; color: var(--text); }
-        .btn-modal-close { background: var(--primary); color: #fff; border: none; padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; }
-
+        .modal-content { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card); padding: 25px; border: 2px solid var(--primary); z-index: 1000; border-radius: 15px; width: 90%; max-width: 400px; }
     </style>
 </head>
-<body>
+<body class="dark-theme">
 
 <div class="header">
     <div>
@@ -154,7 +131,6 @@
 <div class="main-layout">
     <div class="side-panels">
         <div class="panel sticky">
-
             <div class="cloud-zone">
                 <button class="btn-cloud btn-register" id="btn_reg" onclick="handleCloud('register')">👤 VYTVORIŤ UŽÍVATEĽA</button>
                 <div class="cloud-row">
@@ -228,19 +204,17 @@
 </div>
 
 <script>
-    // TVOJ GOOGLE SCRIPT URL (Tento bude vyžadovať úpravu pre multi-user)
-    const CLOUD_URL = "https://script.google.com/macros/s/AKfycbyCBkZBzk1DO0OSuI6AC9etILOaRONlpYb0GsCu2FDA47A3w2AVrtvGfsOV7eF19_im/exec";
+    // TU VLOŽ SVOJU URL Z GOOGLE SCRIPTU
+    const CLOUD_URL = "TU_VLOZ_SVOJU_URL";
 
     let items = [];
     let editingId = null;
     let currentStatus = 'ok';
-    let loggedUserNick = ""; // Uchováva meno práve prihláseného
-    let totalUsersCount = 0; // Počet celkových používateľov
-
-    // THEME & I18N
+    let loggedUserNick = "";
+    let totalUsersCount = 0;
     let isDark = true;
-    const langs = ['en', 'sk', 'cz']; // Poradie prepínania
-    let langIndex = 0; // Začíname na indexe 0 -> EN
+    const langs = ['en', 'sk', 'cz'];
+    let langIndex = 1; // Začíname na SK
     let currentLang = langs[langIndex];
     
     const dict = {
@@ -316,64 +290,32 @@
         document.getElementById('lbl_mat_tot').innerText = t.m_tot; document.getElementById('lbl_cost_tot').innerText = t.c_tot; document.getElementById('lbl_profit_tot').innerText = t.p_tot;
         document.getElementById('btn_save').innerText = editingId ? t.save_edit : t.save;
         document.getElementById('btn_cancel').innerText = t.cancel; document.getElementById('btn_other').innerText = t.other;
-        
         document.getElementById('btn_backup').innerText = t.b_back; 
         document.getElementById('btn_restore').innerText = t.b_rest;
         document.getElementById('btn_reg').innerText = t.b_reg;
-
         document.getElementById('stat_lbl_ok').innerText = t.s_ok; document.getElementById('stat_lbl_time').innerText = t.s_time;
         document.getElementById('stat_lbl_ord').innerText = t.s_ord; document.getElementById('stat_lbl_rev').innerText = t.s_rev;
         document.getElementById('stat_lbl_mat').innerText = t.s_mat; document.getElementById('stat_lbl_ele').innerText = t.s_ele;
         document.getElementById('stat_lbl_other').innerText = t.s_oth; document.getElementById('stat_lbl_profit').innerText = t.s_prof;
         document.getElementById('search_input').placeholder = t.search;
-        
-        // Info text
         document.getElementById('info_text_content').innerHTML = t.info_text;
         document.getElementById('btn_modal_close').innerText = t.close;
-        
         updateUserDisplay();
     }
 
     function updateUserDisplay() {
         const t = dict[currentLang];
         document.getElementById('user_display').innerText = loggedUserNick ? `👤 ${loggedUserNick}` : "";
-        document.getElementById('total_users_display').innerText = totalUsersCount > 0 ? `${t.m_users} ${totalUsersCount}` : "";
+        document.getElementById('total_users_display').innerText = `${t.m_users} ${totalUsersCount}`;
     }
-
-    function openInfo() {
-        document.getElementById('info_overlay').style.display = 'block';
-        document.getElementById('info_modal').style.display = 'block';
-    }
-    function closeInfo() {
-        document.getElementById('info_overlay').style.display = 'none';
-        document.getElementById('info_modal').style.display = 'none';
-    }
-
-    function setStatus(s) {
-        currentStatus = s;
-        document.getElementById('st_cp').classList.toggle('active', s === 'cp');
-        document.getElementById('st_ok').classList.toggle('active', s === 'ok');
-    }
-
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('live-clock').innerText = now.toLocaleTimeString('sk-SK');
-        document.getElementById('date-text').innerText = now.toLocaleDateString('sk-SK', {weekday:'long', day:'2-digit', month:'long'});
-    }
-    setInterval(updateClock, 1000); updateClock();
 
     async function handleCloud(action) {
         const t = dict[currentLang];
-        
         let pass, nick;
-
-        // 1. REGISTRÁCIA
         if(action === 'register') {
             nick = prompt(t.p_nick); if(!nick) return;
             pass = prompt(t.p_pass); if(!pass) return;
-        } 
-        // 2. ZÁLOHA / OBNOVA
-        else {
+        } else {
             pass = prompt(t.p_pass); if(!pass) return;
         }
 
@@ -381,37 +323,60 @@
         const origText = btn.innerText; btn.innerText = "⏳...";
         
         try {
-            // ODOSIELANIE POŽIADAVIEK NA GOOGLE APPS SCRIPT
-            // Tieto parametre (action, nick, pass) bude musieť vedieť tvoj nový Google Script spracovať
             if(action === 'register') {
-                await fetch(CLOUD_URL, {method:'POST', mode:'no-cors', body: JSON.stringify({action: 'register', nick: nick, pass: pass})});
-                alert("Odoslané! Ak skript funguje správne, užívateľ je vytvorený.");
-                loggedUserNick = nick; // Dočasne zobrazíme
-                updateUserDisplay();
+                const res = await fetch(CLOUD_URL, { method: 'POST', body: JSON.stringify({action: 'register', nick: nick, pass: pass}) });
+                const data = await res.json();
+                if (data.error) { alert("❌ " + data.message); } 
+                else { alert("✅ " + data.message); loggedUserNick = nick; updateUserDisplay(); }
             } 
             else if(action === 'backup') {
-                await fetch(CLOUD_URL, {method:'POST', mode:'no-cors', body: JSON.stringify({action: 'backup', pass: pass, data: items})});
-                alert("Záloha odoslaná (Backup sent)!");
+                const res = await fetch(CLOUD_URL, { method: 'POST', body: JSON.stringify({action: 'backup', pass: pass, data: items}) });
+                const data = await res.json();
+                if (data.error) alert("❌ " + data.message); else alert("✅ " + data.message);
             } 
             else if(action === 'restore') {
                 const res = await fetch(`${CLOUD_URL}?action=restore&pass=${encodeURIComponent(pass)}`);
                 const data = await res.json();
-                
-                if (data.error) {
-                    alert("Chyba / Error: " + data.error); 
-                } else { 
-                    // Tu očakávame že backend vráti objekt, napr: { nick: "Jozef", data: [...], userCount: 15 }
-                    items = Array.isArray(data) ? data : (data.data || []); 
-                    loggedUserNick = data.nick || "Unknown"; // NICK z backendu
-                    totalUsersCount = data.userCount || 0;   // Počet z backendu
-                    
-                    refreshUI(); 
-                    updateUserDisplay();
-                    alert("Obnovené (Restored)!"); 
+                if (data.error) alert("❌ " + data.message); 
+                else { 
+                    items = Array.isArray(data.data) ? data.data : []; 
+                    loggedUserNick = data.nick || "Unknown";
+                    totalUsersCount = data.userCount || 0; 
+                    refreshUI(); updateUserDisplay();
+                    alert("✅ Dáta obnovené!"); 
                 }
             }
-        } catch(e) { alert("Chyba spojenia (Connection error)."); }
+        } catch(e) { alert("❌ Chyba spojenia."); }
         btn.innerText = origText;
+    }
+
+    // --- ZVYŠOK LOGIKY (SKRÁTENE PRE PREHĽADNOSŤ) ---
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('live-clock').innerText = now.toLocaleTimeString('sk-SK');
+        document.getElementById('date-text').innerText = now.toLocaleDateString('sk-SK', {weekday:'long', day:'2-digit', month:'long'});
+    }
+    setInterval(updateClock, 1000); updateClock();
+
+    function setStatus(s) {
+        currentStatus = s;
+        document.getElementById('st_cp').classList.toggle('active', s === 'cp');
+        document.getElementById('st_ok').classList.toggle('active', s === 'ok');
+    }
+
+    function clearForm() {
+        editingId = null;
+        document.getElementById('in_name').value = "";
+        document.getElementById('in_w').value = "";
+        document.getElementById('in_h').value = "";
+        document.getElementById('in_m').value = "";
+        document.getElementById('in_price_per').value = "";
+        document.getElementById('btn_save').classList.remove('btn-edit-mode');
+        document.getElementById('btn_cancel').style.display = "none";
+        document.getElementById('btn_other').style.display = "block";
+        applyTexts();
+        updatePreview();
+        refreshUI();
     }
 
     function updatePreview(auto = true) {
@@ -423,211 +388,104 @@
         const f = parseFloat(document.getElementById('cfg_fil').value) || 19;
         const e = parseFloat(document.getElementById('cfg_ele').value) || 0.19;
 
-        const totalW = w * c, totalMins = (h * 60 + m) * c;
-        const matC = (totalW / 1000) * f, eleC = (totalMins / 60) * 0.12 * e;
+        const totalW = w * c;
+        const totalMins = (h * 60 + m) * c;
+        const matC = (totalW / 1000) * f;
+        const eleC = (totalMins / 60) * 0.12 * e;
 
         if(auto) document.getElementById('view_total_cost').value = (matC + eleC).toFixed(2);
         const cost = parseFloat(document.getElementById('view_total_cost').value) || 0;
         document.getElementById('view_total_w').innerText = totalW.toFixed(0) + " g";
         document.getElementById('view_total_profit').innerText = (p * c - cost).toFixed(2) + " €";
-        
         return { totalW, totalMins, matC, eleC, cost, totalSell: p * c, w, h, m, p };
     }
+
+    function saveItem() {
+        const calc = updatePreview(false);
+        const cnt = parseInt(document.getElementById('in_count').value) || 1;
+        const newItem = {
+            id: editingId || Date.now(), type: 'print', status: currentStatus,
+            name: document.getElementById('in_name').value || "Untitled",
+            sell: Number(calc.totalSell), cost: Number(calc.cost), matCost: Number(calc.matC), eleCost: Number(calc.eleC),
+            profit: Number(calc.totalSell - calc.cost), totalW: Number(calc.totalW), mins: Number(calc.totalMins),
+            weight: Number(calc.w), h: Number(calc.h), m: Number(calc.m), pricePer: Number(calc.p), count: cnt, date: new Date().toLocaleString()
+        };
+        if(editingId) items = items.map(i => i.id === editingId ? newItem : i);
+        else items.unshift(newItem);
+        clearForm();
+    }
+
+    function editItem(id) {
+        const i = items.find(x => x.id === id); if(!i) return;
+        editingId = id;
+        setStatus(i.status || 'ok');
+        document.getElementById('in_name').value = i.name;
+        document.getElementById('in_w').value = i.weight;
+        document.getElementById('in_count').value = i.count;
+        document.getElementById('in_h').value = i.h;
+        document.getElementById('in_m').value = i.m;
+        document.getElementById('in_price_per').value = i.pricePer;
+        document.getElementById('btn_save').classList.add('btn-edit-mode');
+        document.getElementById('btn_cancel').style.display = "block";
+        applyTexts();
+        window.scrollTo({top: 0, behavior: 'smooth'});
+        refreshUI();
+    }
+
+    function deleteItem(id) { if(confirm("Zmazať?")) { items = items.filter(i => i.id !== id); refreshUI(); } }
+
+    function refreshUI() {
+        const container = document.getElementById('list_container');
+        const search = document.getElementById('search_input').value.toLowerCase();
+        container.innerHTML = "";
+        
+        let s_kg=0, s_time=0, s_ord=0, s_rev=0, s_mat=0, s_ele=0, s_prof=0, s_oth=0;
+
+        items.forEach(i => {
+            const match = i.name.toLowerCase().includes(search);
+            if(i.status === 'ok') {
+                s_kg += (i.totalW || 0); s_time += (i.mins || 0); s_ord++;
+                s_rev += i.sell; s_mat += (i.matCost || 0); s_ele += (i.eleCost || 0);
+                s_prof += i.profit; if(i.type==='buy' && i.profit < 0) s_oth += Math.abs(i.profit);
+            }
+            if(!match) return;
+
+            const card = document.createElement('div');
+            card.className = `job-card ${editingId === i.id ? 'is-editing' : ''}`;
+            card.innerHTML = `
+                <div class="job-info">
+                    <span class="job-name">${i.name}</span>
+                    <small>${i.date} | ${i.count}ks</small>
+                </div>
+                <div class="job-data">
+                    <div class="data-item"><span class="data-label">Cost</span><span class="data-val">${i.cost.toFixed(2)}€</span></div>
+                    <div class="job-profit" style="color:${i.profit>=0?'var(--success)':'var(--danger)'}">${i.profit.toFixed(2)}€</div>
+                </div>
+                <div class="actions">
+                    <button class="action-btn" onclick="editItem(${i.id})">✎</button>
+                    <button class="action-btn" onclick="deleteItem(${i.id})" style="color:var(--danger)">🗑</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+        document.getElementById('total_kg_ever').innerText = (s_kg/1000).toFixed(2) + " kg";
+        document.getElementById('total_time_ever').innerText = Math.floor(s_time/60) + "h " + (s_time%60) + "m";
+        document.getElementById('stat_count').innerText = s_ord;
+        document.getElementById('stat_obrat').innerText = s_rev.toFixed(2) + " €";
+        document.getElementById('total_mat_cost').innerText = s_mat.toFixed(2) + " €";
+        document.getElementById('total_ele_cost').innerText = s_ele.toFixed(2) + " €";
+        document.getElementById('total_spent_other').innerText = s_oth.toFixed(2) + " €";
+        document.getElementById('stat_profit').innerText = s_prof.toFixed(2) + " €";
+    }
+
+    function openInfo() { document.getElementById('info_overlay').style.display = 'block'; document.getElementById('info_modal').style.display = 'block'; }
+    function closeInfo() { document.getElementById('info_overlay').style.display = 'none'; document.getElementById('info_modal').style.display = 'none'; }
 
     ['in_w', 'in_count', 'in_h', 'in_m', 'in_price_per', 'cfg_fil', 'cfg_ele'].forEach(id => {
         document.getElementById(id).addEventListener('input', () => updatePreview(true));
     });
 
-    function saveItem() {
-        const calc = updatePreview(false);
-        const cnt = parseInt(document.getElementById('in_count').value) || 1;
-        
-        const newItem = {
-            id: editingId || Date.now(), type: 'print', status: currentStatus,
-            name: document.getElementById('in_name').value || (currentLang==='sk'?"Bez názvu": (currentLang==='cz'?"Bez názvu":"Untitled")),
-            sell: Number(calc.totalSell), cost: Number(calc.cost), matCost: Number(calc.matC), eleCost: Number(calc.eleC),
-            profit: Number(calc.totalSell - calc.cost), totalW: Number(calc.totalW), mins: Number(calc.totalMins),
-            weight: Number(calc.w), h: Number(calc.h), m: Number(calc.m), pricePer: Number(calc.p),
-            costPer: Number(calc.cost / cnt), count: cnt, date: new Date().toLocaleString('sk-SK')
-        };
-
-        if(editingId) items = items.map(i => i.id === editingId ? newItem : i);
-        else items.unshift(newItem);
-        
-        clearForm(); refreshUI();
-    }
-
-    function toggleItemStatus(id) { items = items.map(i => (i.id === id) ? { ...i, status: i.status === 'ok' ? 'cp' : 'ok' } : i); refreshUI(); }
-
-    function editItem(id) {
-        const t = dict[currentLang];
-        const i = items.find(x => x.id === id); if(!i) return;
-        if (i.type === 'buy') {
-            const newName = prompt(currentLang==='sk'?"Upraviť názov:":(currentLang==='cz'?"Upravit název:":"Edit name:"), i.name);
-            if (newName === null) return;
-            const currentVal = (i.profit >= 0 ? i.sell : -i.cost).toString().replace('.', ',');
-            const newValStr = prompt(currentLang==='sk'?"Suma (+ predaj, - výdavok):":(currentLang==='cz'?"Suma (+ prodej, - výdaj):":"Value (+ sell, - expense):"), currentVal);
-            if (newValStr === null) return;
-            const v = parseFloat(newValStr.replace(',', '.'));
-            if (isNaN(v)) return;
-            items = items.map(item => item.id === id ? { ...item, name: newName, sell: v > 0 ? v : 0, cost: v < 0 ? Math.abs(v) : 0, profit: v } : item);
-            refreshUI(); return;
-        }
-
-        if (editingId === id) { clearForm(); return; }
-        editingId = id;
-        setStatus(i.status || 'ok');
-        document.getElementById('in_name').value = i.name; document.getElementById('in_w').value = i.weight || 0;
-        document.getElementById('in_count').value = i.count || 1; document.getElementById('in_h').value = i.h || 0;
-        document.getElementById('in_m').value = i.m || 0; document.getElementById('in_price_per').value = (i.pricePer || (i.sell/i.count)).toFixed(2);
-        document.getElementById('view_total_cost').value = i.cost.toFixed(2);
-        
-        document.getElementById('btn_save').classList.add('btn-edit-mode');
-        document.getElementById('btn_cancel').style.display = "block";
-        document.getElementById('btn_other').style.display = "none";
-        
-        applyTexts(); window.scrollTo({top: 0, behavior: 'smooth'});
-        updatePreview(false); refreshUI();
-    }
-
-    function clearForm() {
-        editingId = null; setStatus('ok');
-        ['in_name','in_w','in_h','in_m','in_price_per'].forEach(id => document.getElementById(id).value = '');
-        document.getElementById('in_count').value = '1';
-        document.getElementById('btn_save').classList.remove('btn-edit-mode');
-        document.getElementById('btn_cancel').style.display = "none";
-        document.getElementById('btn_other').style.display = "block";
-        applyTexts(); updatePreview(true); refreshUI();
-    }
-
-    function duplicateItem(id) {
-        const i = items.find(x => x.id === id);
-        items.unshift({...i, id: Date.now(), date: new Date().toLocaleString('sk-SK')});
-        refreshUI();
-    }
-
-    function addOtherItem() {
-        const n = prompt(currentLang==='sk'?"Názov:":(currentLang==='cz'?"Název:":"Name:")); if(!n) return;
-        const valStr = prompt(currentLang==='sk'?"Suma (+ predaj, - výdavok):":(currentLang==='cz'?"Suma (+ prodej, - výdaj):":"Value (+ sell, - expense):")); if(!valStr) return;
-        const v = parseFloat(valStr.replace(',','.')); if(isNaN(v)) return;
-        items.unshift({id:Date.now(), type:'buy', status:'ok', name:n, sell: v>0?v:0, cost: v<0?Math.abs(v):0, profit:v, date: new Date().toLocaleString('sk-SK')});
-        refreshUI();
-    }
-
-    function deleteItem(id) { if(confirm(currentLang==='sk'?"Zmazať?":(currentLang==='cz'?"Smazat?":"Delete?"))) { items = items.filter(i => i.id !== id); if(editingId === id) clearForm(); refreshUI(); } }
-
-    /* SORTING & DRAG DROP LOGIC */
-    function moveListItem(id, action) {
-        const idx = items.findIndex(i => i.id === id); if (idx < 0) return;
-        const item = items.splice(idx, 1)[0];
-        if (action === 'top') items.unshift(item);
-        if (action === 'bottom') items.push(item);
-        refreshUI();
-    }
-
-    function handleDragStart(e, id) {
-        e.dataTransfer.setData('text/plain', id);
-        e.dataTransfer.effectAllowed = 'move';
-        setTimeout(() => e.target.style.opacity = '0.5', 0);
-    }
-    function handleDragOver(e) { e.preventDefault(); e.target.closest('.job-card')?.classList.add('drag-over'); }
-    function handleDragLeave(e) { e.target.closest('.job-card')?.classList.remove('drag-over'); }
-    function handleDrop(e, targetId) {
-        e.preventDefault(); e.target.closest('.job-card')?.classList.remove('drag-over');
-        const draggedId = Number(e.dataTransfer.getData('text/plain'));
-        if (draggedId && draggedId !== targetId) {
-            const from = items.findIndex(i => i.id === draggedId);
-            const to = items.findIndex(i => i.id === targetId);
-            if (from >= 0 && to >= 0) {
-                const item = items.splice(from, 1)[0];
-                items.splice(to, 0, item);
-                refreshUI();
-            }
-        }
-    }
-    function handleDragEnd(e) { e.target.style.opacity = '1'; document.querySelectorAll('.job-card').forEach(c => c.classList.remove('drag-over')); }
-
-    function refreshUI() {
-        const t = dict[currentLang];
-        const container = document.getElementById('list_container');
-        const query = document.getElementById('search_input').value.toLowerCase();
-        container.innerHTML = '';
-        
-        let tObrat = 0, tProfit = 0, tKg = 0, tMins = 0, tMat = 0, tEle = 0, tOther = 0, okCount = 0;
-
-        items.forEach(i => {
-            if(query && !i.name.toLowerCase().includes(query)) return;
-            const isCP = i.status === 'cp'; const isEditing = editingId === i.id;
-            const sell = Number(i.sell) || 0; const cost = Number(i.cost) || 0;
-            const profit = sell - cost; const count = i.count || 1;
-
-            if(!isCP) {
-                tObrat += sell; tProfit += (i.type === 'buy' ? Number(i.profit) : profit); okCount++;
-                if(i.type === 'print') {
-                    tKg += (Number(i.totalW) || 0); tMins += (Number(i.mins) || 0);
-                    const mC = Number(i.matCost) || 0; const eC = Number(i.eleCost) || 0;
-                    tMat += mC; tEle += eC;
-                    if(cost > (mC + eC + 0.01)) tOther += (cost - (mC + eC));
-                } else if(profit < 0) { tOther += Math.abs(profit); }
-            }
-
-            const details = i.type === 'print' ? `${(Number(i.totalW)||0).toFixed(0)}g | ${Math.floor((Number(i.mins)||0)/60)}h ${(Number(i.mins)||0)%60}m` : t.buy;
-            const costPer = (cost / count).toFixed(2); const sellPer = (sell / count).toFixed(2);
-
-            container.innerHTML += `
-                <div class="job-card type-${i.type} ${isEditing ? 'is-editing' : ''} ${isCP ? 'is-cp' : ''}" draggable="true" ondragstart="handleDragStart(event, ${i.id})" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, ${i.id})" ondragend="handleDragEnd(event)">
-                    
-                    <div class="sort-controls">
-                        <div class="sc-btn" title="Hore" onclick="moveListItem(${i.id}, 'top')">▲</div>
-                        <div class="sc-btn sc-drag" title="Chyť a potiahni">=</div>
-                        <div class="sc-btn" title="Dole" onclick="moveListItem(${i.id}, 'bottom')">▼</div>
-                    </div>
-
-                    <div class="job-info">
-                        <span class="job-name">${i.name} <span class="job-tag ${isCP?'tag-cp':'tag-ok'}">${isCP?'CP':'OK'}</span></span>
-                        <div style="font-size:0.75em; color:#888; font-weight:bold;">${details}</div>
-                        <div style="font-size:0.70em; color:#666; margin-top:2px;">${i.date}</div>
-                    </div>
-                    
-                    <div class="job-data">
-                        <div class="data-item">
-                            <span class="data-label">${t.cost}</span>
-                            <span class="data-val" style="color:var(--danger)">${cost.toFixed(2)} €</span>
-                            ${i.type==='print' ? `<span class="data-sub">${count}ks (${costPer} €/ks)</span>` : ''}
-                        </div>
-                        <div class="data-item">
-                            <span class="data-label">${t.sell}</span>
-                            <span class="data-val" style="color:var(--primary)">${sell.toFixed(2)} €</span>
-                            ${i.type==='print' ? `<span class="data-sub">${count}ks (${sellPer} €/ks)</span>` : ''}
-                        </div>
-                    </div>
-                    
-                    <div class="job-profit">
-                        <span class="profit-label">${t.profit}</span>
-                        <span style="color:${profit >= 0 ? 'var(--success)' : 'var(--danger)'}">${profit > 0 ? '+'+profit.toFixed(2) : profit.toFixed(2)} €</span>
-                    </div>
-
-                    <div class="actions">
-                        ${i.type === 'print' ? `<button class="action-btn ${!isCP?'active-status':''}" title="Prepnúť OK/CP" onclick="toggleItemStatus(${i.id})">✓</button>` : ''}
-                        <button class="action-btn ${isEditing?'is-active-edit':''}" title="Upraviť" onclick="editItem(${i.id})">✎</button>
-                        <button class="action-btn" title="Klonovať" onclick="duplicateItem(${i.id})">📋</button>
-                        <button class="action-btn" title="Zmazať" onclick="deleteItem(${i.id})">✖</button>
-                    </div>
-                </div>
-            `;
-        });
-
-        document.getElementById('total_kg_ever').innerText = (tKg/1000).toFixed(2) + " kg";
-        document.getElementById('total_time_ever').innerText = `${Math.floor(tMins/60)}h ${tMins%60}m`;
-        document.getElementById('stat_count').innerText = okCount;
-        document.getElementById('stat_obrat').innerText = tObrat.toFixed(2) + " €";
-        document.getElementById('total_mat_cost').innerText = tMat.toFixed(2) + " €";
-        document.getElementById('total_ele_cost').innerText = tEle.toFixed(2) + " €";
-        document.getElementById('total_spent_other').innerText = tOther.toFixed(2) + " €";
-        document.getElementById('stat_profit').innerText = tProfit.toFixed(2) + " €";
-    }
-
-    // Spustí sa pri načítaní stránky
     applyTexts();
     refreshUI();
 </script>
