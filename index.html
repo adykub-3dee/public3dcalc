@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sk">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -23,14 +23,20 @@
 
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); padding: 10px; margin: 0; transition: background 0.3s, color 0.3s; }
         
+        /* USER INFO (Top Left) & TOTAL USERS (Bottom Left) */
+        #user_display { font-size: 0.8em; color: var(--success); font-weight: bold; margin-bottom: 5px; text-transform: uppercase; }
+        #total_users_display { position: fixed; bottom: 5px; left: 10px; font-size: 0.65em; color: #666; font-weight: bold; z-index: 100; }
+
         .header { width: 100%; max-width: 1200px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 12px; margin: 0 auto 15px auto; gap: 10px; }
         .header-center { flex-grow: 1; text-align: center; }
         #live-clock { font-size: 1.8em; font-weight: 900; color: var(--text); margin-bottom: 2px; }
-        #live-date { font-size: 0.85em; color: var(--primary); text-transform: uppercase; font-weight: bold; }
+        #live-date { font-size: 0.85em; color: var(--primary); text-transform: uppercase; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; }
         
         .config-bar { background: var(--job-bg); padding: 10px; border-radius: 10px; display: flex; gap: 10px; border: 1px solid var(--primary); align-items: flex-end;}
         .config-input { background: var(--input-bg); border: 1px solid var(--primary); color: var(--primary); font-weight: bold; text-align: center; border-radius: 4px; padding: 5px; width: 60px; }
         .btn-toggle { background: var(--btn-bg); color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 5px 10px; font-weight: bold; cursor: pointer; transition: 0.2s; height: 30px; display: flex; align-items: center; justify-content: center;}
+        .btn-info { background: transparent; color: var(--primary); border: 1px solid var(--primary); border-radius: 5px; padding: 2px 8px; font-size: 0.9em; cursor: pointer; font-weight: bold; transition: 0.3s;}
+        .btn-info:hover { background: var(--primary); color: #000; }
 
         .main-layout { width: 100%; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 20px; }
         @media (min-width: 768px) { .main-layout { grid-template-columns: 340px 1fr; } }
@@ -58,10 +64,12 @@
         .btn-edit-mode { background: var(--accent); color: #000; }
         .btn-buy { background: transparent; color: var(--success); border: 1px solid var(--success); padding: 8px; width: 100%; border-radius: 10px; margin-top: 10px; cursor: pointer; font-weight: bold; }
 
-        .cloud-zone { display: flex; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); }
-        .btn-cloud { flex: 1; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 0.8em; }
+        .cloud-zone { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+        .cloud-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .btn-cloud { width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 0.8em; transition: 0.2s;}
         .btn-backup { background: #0044cc; color: white; }
         .btn-restore { background: var(--btn-bg); color: var(--text); border: 1px solid var(--border); }
+        .btn-register { background: var(--success); color: #000; grid-column: 1 / -1; }
 
         .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
         @media (min-width: 900px) { .summary-grid { grid-template-columns: repeat(4, 1fr); } }
@@ -111,23 +119,34 @@
         .action-btn { background: var(--btn-bg); border: 1px solid var(--border); color: #888; cursor: pointer; padding: 8px; border-radius: 6px; transition: 0.3s; }
         .action-btn:hover { color: var(--text); }
         .action-btn.active-status { background: var(--success); color: #000; border-color: var(--success); }
-        .action-btn.is-active-edit { background: var(--accent) !important; color: #000 !important; border-color: var(--accent); box-shadow: 0 0 12px var(--accent); animation: pulse-edit 1.5s infinite; }
 
-        @keyframes pulse-edit { 0% { box-shadow: 0 0 5px var(--accent); } 50% { box-shadow: 0 0 18px var(--accent); } 100% { box-shadow: 0 0 5px var(--accent); } }
+        /* MODAL STYLES */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; backdrop-filter: blur(3px); }
+        .modal-content { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card); padding: 25px; border: 2px solid var(--primary); z-index: 1000; border-radius: 15px; width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .modal-title { margin-top: 0; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .modal-text { font-size: 0.9em; line-height: 1.5; color: var(--text); }
+        .btn-modal-close { background: var(--primary); color: #fff; border: none; padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1 style="margin:0; font-size:1.4em; color:var(--primary);">3Dee <span style="color:var(--text)">PRO calc</span></h1>
+    <div>
+        <div id="user_display"></div>
+        <h1 style="margin:0; font-size:1.4em; color:var(--primary);">3Dee <span style="color:var(--text)">PRO calc</span></h1>
+    </div>
     <div class="header-center">
         <div id="live-clock">--:--:--</div>
-        <div id="live-date">--.--.----</div>
+        <div id="live-date">
+            <span id="date-text">--.--.----</span>
+            <button class="btn-info" onclick="openInfo()">ℹ️ INFO</button>
+        </div>
     </div>
     <div class="config-bar">
         <div><label>€/KG</label><input type="number" id="cfg_fil" value="19" class="config-input"></div>
         <div><label>€/KWH</label><input type="number" id="cfg_ele" value="0.19" class="config-input"></div>
-        <button id="btn_lang" class="btn-toggle" onclick="toggleLang()">SK</button>
+        <button id="btn_lang" class="btn-toggle" onclick="toggleLang()">EN</button>
         <button id="btn_theme" class="btn-toggle" onclick="toggleTheme()">🌙</button>
     </div>
 </div>
@@ -135,6 +154,15 @@
 <div class="main-layout">
     <div class="side-panels">
         <div class="panel sticky">
+
+            <div class="cloud-zone">
+                <button class="btn-cloud btn-register" id="btn_reg" onclick="handleCloud('register')">👤 VYTVORIŤ UŽÍVATEĽA</button>
+                <div class="cloud-row">
+                    <button class="btn-cloud btn-backup" id="btn_backup" onclick="handleCloud('backup')">☁️ ZÁLOHOVAŤ</button>
+                    <button class="btn-cloud btn-restore" id="btn_restore" onclick="handleCloud('restore')">⬇️ OBNOVIŤ</button>
+                </div>
+            </div>
+
             <h2 id="form_title" style="color:var(--primary); font-size: 1.1em; margin-bottom: 15px;">✚ NOVÁ TLAČ</h2>
             
             <label id="lbl_type">Typ záznamu</label>
@@ -170,11 +198,6 @@
             <button class="btn-add" id="btn_save" onclick="saveItem()">ULOŽIŤ DO HISTÓRIE</button>
             <button id="btn_cancel" onclick="clearForm()" style="display:none; background:var(--btn-bg); border:1px solid var(--border); color:var(--danger); padding:10px; border-radius:10px; width:100%; margin-top:10px; cursor:pointer; font-weight:bold;">✖ ZRUŠIŤ ÚPRAVU</button>
             <button class="btn-buy" id="btn_other" onclick="addOtherItem()">✚ NÁKUP / INÉ VÝDAVKY</button>
-
-            <div class="cloud-zone">
-                <button class="btn-cloud btn-backup" id="btn_backup" onclick="handleCloud('backup')">☁️ ZÁLOHOVAŤ</button>
-                <button class="btn-cloud btn-restore" id="btn_restore" onclick="handleCloud('restore')">⬇️ OBNOVIŤ</button>
-            </div>
         </div>
     </div>
 
@@ -195,39 +218,76 @@
     </div>
 </div>
 
+<div id="total_users_display"></div>
+
+<div class="modal-overlay" id="info_overlay" onclick="closeInfo()"></div>
+<div class="modal-content" id="info_modal">
+    <h3 class="modal-title">ℹ️ O aplikácii / About</h3>
+    <div class="modal-text" id="info_text_content"></div>
+    <button class="btn-modal-close" id="btn_modal_close" onclick="closeInfo()">Zavrieť</button>
+</div>
+
 <script>
+    // TVOJ GOOGLE SCRIPT URL (Tento bude vyžadovať úpravu pre multi-user)
     const CLOUD_URL = "https://script.google.com/macros/s/AKfycbzSxRSqxXHtTY52udFQA7l6Xs1GN7kI8aZHij4Si8OK8u_KudDeDwXbIvLTOPLmppXi/exec";
 
     let items = [];
     let editingId = null;
     let currentStatus = 'ok';
-    
+    let loggedUserNick = ""; // Uchováva meno práve prihláseného
+    let totalUsersCount = 0; // Počet celkových používateľov
+
     // THEME & I18N
     let isDark = true;
-    let currentLang = 'sk';
+    const langs = ['en', 'sk', 'cz']; // Poradie prepínania
+    let langIndex = 0; // Začíname na indexe 0 -> EN
+    let currentLang = langs[langIndex];
     
     const dict = {
-        sk: {
-            title: "✚ NOVÁ TLAČ", edit: "✎ UPRAVIŤ TLAČ", cp: "CP (Ponuka)", ok: "OK (Výroba)",
-            type: "Typ záznamu", name: "Názov Projektu", w: "Váha/ks (g)", count: "Počet ks",
-            h: "Hodiny", m: "Minúty", price: "Predajná cena / 1 ks (€)",
-            m_tot: "MATERIÁL SPOLU:", c_tot: "NÁKLAD (€):", p_tot: "ČISTÝ ZISK:",
-            save: "ULOŽIŤ DO HISTÓRIE", save_edit: "ULOŽIŤ ZMENY", cancel: "✖ ZRUŠIŤ ÚPRAVU", other: "✚ NÁKUP / INÉ VÝDAVKY",
-            b_back: "☁️ ZÁLOHOVAŤ", b_rest: "⬇️ OBNOVIŤ",
-            s_ok: "Vytlačené (OK)", s_time: "Čas Tlače", s_ord: "Zákazky", s_rev: "Obrat",
-            s_mat: "Materiál", s_ele: "Elektrina", s_oth: "Iné Extra", s_prof: "Čistý Zisk",
-            search: "🔍 Vyhľadať v histórii...", cost: "Náklad", sell: "Predaj", profit: "Zisk", buy: "Nákup / Výdavok"
-        },
         en: {
             title: "✚ NEW PRINT", edit: "✎ EDIT PRINT", cp: "Quote (CP)", ok: "Done (OK)",
             type: "Record Type", name: "Project Name", w: "Weight/pc (g)", count: "Quantity",
             h: "Hours", m: "Minutes", price: "Sell Price / 1 pc (€)",
             m_tot: "MATERIAL TOTAL:", c_tot: "COST (€):", p_tot: "NET PROFIT:",
             save: "SAVE TO HISTORY", save_edit: "SAVE CHANGES", cancel: "✖ CANCEL EDIT", other: "✚ BUY / EXPENSE",
-            b_back: "☁️ BACKUP", b_rest: "⬇️ RESTORE",
+            b_back: "☁️ BACKUP", b_rest: "⬇️ RESTORE", b_reg: "👤 REGISTER USER",
             s_ok: "Printed (OK)", s_time: "Print Time", s_ord: "Orders", s_rev: "Revenue",
             s_mat: "Material", s_ele: "Electricity", s_oth: "Other Extra", s_prof: "Net Profit",
-            search: "🔍 Search history...", cost: "Cost", sell: "Sell", profit: "Profit", buy: "Purchase / Expense"
+            search: "🔍 Search history...", cost: "Cost", sell: "Sell", profit: "Profit", buy: "Purchase / Expense",
+            p_nick: "Enter NICK (Username):", p_pass: "Enter PASSWORD:",
+            m_users: "Total registered users: ",
+            info_text: "<b>3Dee PRO Calc</b> is a micro-SaaS tool for 3D printers.<br><br><b>1. Register:</b> Create your Nick and Password.<br><b>2. Calculate:</b> Track costs, electricity, and material usage.<br><b>3. Cloud:</b> Use your password to backup or restore your personal data securely to the cloud.",
+            close: "Close"
+        },
+        sk: {
+            title: "✚ NOVÁ TLAČ", edit: "✎ UPRAVIŤ TLAČ", cp: "CP (Ponuka)", ok: "OK (Výroba)",
+            type: "Typ záznamu", name: "Názov Projektu", w: "Váha/ks (g)", count: "Počet ks",
+            h: "Hodiny", m: "Minúty", price: "Predajná cena / 1 ks (€)",
+            m_tot: "MATERIÁL SPOLU:", c_tot: "NÁKLAD (€):", p_tot: "ČISTÝ ZISK:",
+            save: "ULOŽIŤ DO HISTÓRIE", save_edit: "ULOŽIŤ ZMENY", cancel: "✖ ZRUŠIŤ ÚPRAVU", other: "✚ NÁKUP / INÉ VÝDAVKY",
+            b_back: "☁️ ZÁLOHOVAŤ", b_rest: "⬇️ OBNOVIŤ", b_reg: "👤 VYTVORIŤ UŽÍVATEĽA",
+            s_ok: "Vytlačené (OK)", s_time: "Čas Tlače", s_ord: "Zákazky", s_rev: "Obrat",
+            s_mat: "Materiál", s_ele: "Elektrina", s_oth: "Iné Extra", s_prof: "Čistý Zisk",
+            search: "🔍 Vyhľadať v histórii...", cost: "Náklad", sell: "Predaj", profit: "Zisk", buy: "Nákup / Výdavok",
+            p_nick: "Zadaj NICK (Prezývku):", p_pass: "Zadaj HESLO:",
+            m_users: "Celkový počet užívateľov: ",
+            info_text: "<b>3Dee PRO Calc</b> je micro-SaaS nástroj pre 3D tlačiarov.<br><br><b>1. Registrácia:</b> Vytvor si Nick a Heslo.<br><b>2. Výpočet:</b> Zapisuj náklady, elektrinu a materiál.<br><b>3. Cloud:</b> Použi svoje heslo pre bezpečné zálohovanie alebo obnovu svojich dát z cloudu.",
+            close: "Zavrieť"
+        },
+        cz: {
+            title: "✚ NOVÝ TISK", edit: "✎ UPRAVIT TISK", cp: "CP (Nabídka)", ok: "OK (Výroba)",
+            type: "Typ záznamu", name: "Název Projektu", w: "Váha/ks (g)", count: "Počet ks",
+            h: "Hodiny", m: "Minuty", price: "Prodejní cena / 1 ks (€)",
+            m_tot: "MATERIÁL SPOLU:", c_tot: "NÁKLAD (€):", p_tot: "ČISTÝ ZISK:",
+            save: "ULOŽIT DO HISTORIE", save_edit: "ULOŽIT ZMĚNY", cancel: "✖ ZRUŠIT ÚPRAVU", other: "✚ NÁKUP / JINÉ VÝDAJE",
+            b_back: "☁️ ZÁLOHOVAT", b_rest: "⬇️ OBNOVIT", b_reg: "👤 VYTVOŘIT UŽIVATELE",
+            s_ok: "Vytištěno (OK)", s_time: "Čas Tisku", s_ord: "Zakázky", s_rev: "Obrat",
+            s_mat: "Materiál", s_ele: "Elektřina", s_oth: "Jiné Extra", s_prof: "Čistý Zisk",
+            search: "🔍 Vyhledat v historii...", cost: "Náklad", sell: "Prodej", profit: "Zisk", buy: "Nákup / Výdaj",
+            p_nick: "Zadej NICK (Přezdívku):", p_pass: "Zadej HESLO:",
+            m_users: "Celkový počet uživatelů: ",
+            info_text: "<b>3Dee PRO Calc</b> je micro-SaaS nástroj pro 3D tiskaře.<br><br><b>1. Registrace:</b> Vytvoř si Nick a Heslo.<br><b>2. Výpočet:</b> Zapisuj náklady, elektřinu a materiál.<br><b>3. Cloud:</b> Použij své heslo pro bezpečné zálohování nebo obnovu svých dat z cloudu.",
+            close: "Zavřít"
         }
     };
 
@@ -238,7 +298,8 @@
     }
 
     function toggleLang() {
-        currentLang = currentLang === 'sk' ? 'en' : 'sk';
+        langIndex = (langIndex + 1) % langs.length;
+        currentLang = langs[langIndex];
         document.getElementById('btn_lang').innerText = currentLang.toUpperCase();
         applyTexts();
         refreshUI();
@@ -255,12 +316,37 @@
         document.getElementById('lbl_mat_tot').innerText = t.m_tot; document.getElementById('lbl_cost_tot').innerText = t.c_tot; document.getElementById('lbl_profit_tot').innerText = t.p_tot;
         document.getElementById('btn_save').innerText = editingId ? t.save_edit : t.save;
         document.getElementById('btn_cancel').innerText = t.cancel; document.getElementById('btn_other').innerText = t.other;
-        document.getElementById('btn_backup').innerText = t.b_back; document.getElementById('btn_restore').innerText = t.b_rest;
+        
+        document.getElementById('btn_backup').innerText = t.b_back; 
+        document.getElementById('btn_restore').innerText = t.b_rest;
+        document.getElementById('btn_reg').innerText = t.b_reg;
+
         document.getElementById('stat_lbl_ok').innerText = t.s_ok; document.getElementById('stat_lbl_time').innerText = t.s_time;
         document.getElementById('stat_lbl_ord').innerText = t.s_ord; document.getElementById('stat_lbl_rev').innerText = t.s_rev;
         document.getElementById('stat_lbl_mat').innerText = t.s_mat; document.getElementById('stat_lbl_ele').innerText = t.s_ele;
         document.getElementById('stat_lbl_other').innerText = t.s_oth; document.getElementById('stat_lbl_profit').innerText = t.s_prof;
         document.getElementById('search_input').placeholder = t.search;
+        
+        // Info text
+        document.getElementById('info_text_content').innerHTML = t.info_text;
+        document.getElementById('btn_modal_close').innerText = t.close;
+        
+        updateUserDisplay();
+    }
+
+    function updateUserDisplay() {
+        const t = dict[currentLang];
+        document.getElementById('user_display').innerText = loggedUserNick ? `👤 ${loggedUserNick}` : "";
+        document.getElementById('total_users_display').innerText = totalUsersCount > 0 ? `${t.m_users} ${totalUsersCount}` : "";
+    }
+
+    function openInfo() {
+        document.getElementById('info_overlay').style.display = 'block';
+        document.getElementById('info_modal').style.display = 'block';
+    }
+    function closeInfo() {
+        document.getElementById('info_overlay').style.display = 'none';
+        document.getElementById('info_modal').style.display = 'none';
     }
 
     function setStatus(s) {
@@ -272,26 +358,59 @@
     function updateClock() {
         const now = new Date();
         document.getElementById('live-clock').innerText = now.toLocaleTimeString('sk-SK');
-        document.getElementById('live-date').innerText = now.toLocaleDateString('sk-SK', {weekday:'long', day:'2-digit', month:'long'});
+        document.getElementById('date-text').innerText = now.toLocaleDateString('sk-SK', {weekday:'long', day:'2-digit', month:'long'});
     }
     setInterval(updateClock, 1000); updateClock();
 
     async function handleCloud(action) {
-        const pass = prompt("Heslo / Password:");
-        if(!pass) return;
-        const btn = document.getElementById(action === 'backup' ? 'btn_backup' : 'btn_restore');
+        const t = dict[currentLang];
+        
+        let pass, nick;
+
+        // 1. REGISTRÁCIA
+        if(action === 'register') {
+            nick = prompt(t.p_nick); if(!nick) return;
+            pass = prompt(t.p_pass); if(!pass) return;
+        } 
+        // 2. ZÁLOHA / OBNOVA
+        else {
+            pass = prompt(t.p_pass); if(!pass) return;
+        }
+
+        const btn = document.getElementById(action === 'register' ? 'btn_reg' : (action === 'backup' ? 'btn_backup' : 'btn_restore'));
         const origText = btn.innerText; btn.innerText = "⏳...";
+        
         try {
-            if(action === 'backup') {
-                await fetch(CLOUD_URL, {method:'POST', mode:'no-cors', body: JSON.stringify({pass, data: items})});
-                alert("Zálohované / Backed up!");
-            } else {
-                const res = await fetch(`${CLOUD_URL}?pass=${encodeURIComponent(pass)}`);
+            // ODOSIELANIE POŽIADAVIEK NA GOOGLE APPS SCRIPT
+            // Tieto parametre (action, nick, pass) bude musieť vedieť tvoj nový Google Script spracovať
+            if(action === 'register') {
+                await fetch(CLOUD_URL, {method:'POST', mode:'no-cors', body: JSON.stringify({action: 'register', nick: nick, pass: pass})});
+                alert("Odoslané! Ak skript funguje správne, užívateľ je vytvorený.");
+                loggedUserNick = nick; // Dočasne zobrazíme
+                updateUserDisplay();
+            } 
+            else if(action === 'backup') {
+                await fetch(CLOUD_URL, {method:'POST', mode:'no-cors', body: JSON.stringify({action: 'backup', pass: pass, data: items})});
+                alert("Záloha odoslaná (Backup sent)!");
+            } 
+            else if(action === 'restore') {
+                const res = await fetch(`${CLOUD_URL}?action=restore&pass=${encodeURIComponent(pass)}`);
                 const data = await res.json();
-                if (data.error) alert("Chyba / Error: " + data.error); 
-                else { items = Array.isArray(data) ? data : (data.data || []); refreshUI(); alert("Obnovené / Restored!"); }
+                
+                if (data.error) {
+                    alert("Chyba / Error: " + data.error); 
+                } else { 
+                    // Tu očakávame že backend vráti objekt, napr: { nick: "Jozef", data: [...], userCount: 15 }
+                    items = Array.isArray(data) ? data : (data.data || []); 
+                    loggedUserNick = data.nick || "Unknown"; // NICK z backendu
+                    totalUsersCount = data.userCount || 0;   // Počet z backendu
+                    
+                    refreshUI(); 
+                    updateUserDisplay();
+                    alert("Obnovené (Restored)!"); 
+                }
             }
-        } catch(e) { alert("Chyba spojenia / Connection error!"); }
+        } catch(e) { alert("Chyba spojenia (Connection error)."); }
         btn.innerText = origText;
     }
 
@@ -325,7 +444,7 @@
         
         const newItem = {
             id: editingId || Date.now(), type: 'print', status: currentStatus,
-            name: document.getElementById('in_name').value || (currentLang==='sk'?"Bez názvu":"Untitled"),
+            name: document.getElementById('in_name').value || (currentLang==='sk'?"Bez názvu": (currentLang==='cz'?"Bez názvu":"Untitled")),
             sell: Number(calc.totalSell), cost: Number(calc.cost), matCost: Number(calc.matC), eleCost: Number(calc.eleC),
             profit: Number(calc.totalSell - calc.cost), totalW: Number(calc.totalW), mins: Number(calc.totalMins),
             weight: Number(calc.w), h: Number(calc.h), m: Number(calc.m), pricePer: Number(calc.p),
@@ -341,12 +460,13 @@
     function toggleItemStatus(id) { items = items.map(i => (i.id === id) ? { ...i, status: i.status === 'ok' ? 'cp' : 'ok' } : i); refreshUI(); }
 
     function editItem(id) {
+        const t = dict[currentLang];
         const i = items.find(x => x.id === id); if(!i) return;
         if (i.type === 'buy') {
-            const newName = prompt(currentLang==='sk'?"Upraviť názov:":"Edit name:", i.name);
+            const newName = prompt(currentLang==='sk'?"Upraviť názov:":(currentLang==='cz'?"Upravit název:":"Edit name:"), i.name);
             if (newName === null) return;
             const currentVal = (i.profit >= 0 ? i.sell : -i.cost).toString().replace('.', ',');
-            const newValStr = prompt(currentLang==='sk'?"Suma (+ predaj, - výdavok):":"Value (+ sell, - expense):", currentVal);
+            const newValStr = prompt(currentLang==='sk'?"Suma (+ predaj, - výdavok):":(currentLang==='cz'?"Suma (+ prodej, - výdaj):":"Value (+ sell, - expense):"), currentVal);
             if (newValStr === null) return;
             const v = parseFloat(newValStr.replace(',', '.'));
             if (isNaN(v)) return;
@@ -387,14 +507,14 @@
     }
 
     function addOtherItem() {
-        const n = prompt(currentLang==='sk'?"Názov:":"Name:"); if(!n) return;
-        const valStr = prompt(currentLang==='sk'?"Suma (+ predaj, - výdavok):":"Value (+ sell, - expense):"); if(!valStr) return;
+        const n = prompt(currentLang==='sk'?"Názov:":(currentLang==='cz'?"Název:":"Name:")); if(!n) return;
+        const valStr = prompt(currentLang==='sk'?"Suma (+ predaj, - výdavok):":(currentLang==='cz'?"Suma (+ prodej, - výdaj):":"Value (+ sell, - expense):")); if(!valStr) return;
         const v = parseFloat(valStr.replace(',','.')); if(isNaN(v)) return;
         items.unshift({id:Date.now(), type:'buy', status:'ok', name:n, sell: v>0?v:0, cost: v<0?Math.abs(v):0, profit:v, date: new Date().toLocaleString('sk-SK')});
         refreshUI();
     }
 
-    function deleteItem(id) { if(confirm(currentLang==='sk'?"Zmazať?":"Delete?")) { items = items.filter(i => i.id !== id); if(editingId === id) clearForm(); refreshUI(); } }
+    function deleteItem(id) { if(confirm(currentLang==='sk'?"Zmazať?":(currentLang==='cz'?"Smazat?":"Delete?"))) { items = items.filter(i => i.id !== id); if(editingId === id) clearForm(); refreshUI(); } }
 
     /* SORTING & DRAG DROP LOGIC */
     function moveListItem(id, action) {
@@ -481,30 +601,35 @@
                             ${i.type==='print' ? `<span class="data-sub">${count}ks (${sellPer} €/ks)</span>` : ''}
                         </div>
                     </div>
-
-                    <div class="job-profit" style="color:${profit>=0?'var(--success)':'var(--danger)'}">
+                    
+                    <div class="job-profit">
                         <span class="profit-label">${t.profit}</span>
-                        ${profit.toFixed(2)}€
+                        <span style="color:${profit >= 0 ? 'var(--success)' : 'var(--danger)'}">${profit > 0 ? '+'+profit.toFixed(2) : profit.toFixed(2)} €</span>
                     </div>
 
                     <div class="actions">
-                        <button class="action-btn ${isCP?'':'active-status'}" title="Prepnúť" onclick="toggleItemStatus(${i.id})">${isCP?'CP':'OK'}</button>
-                        <button class="action-btn" onclick="duplicateItem(${i.id})">❐</button>
-                        <button class="action-btn ${isEditing ? 'is-active-edit' : ''}" onclick="editItem(${i.id})">✎</button>
-                        <button class="action-btn" onclick="deleteItem(${i.id})">🗑</button>
+                        ${i.type === 'print' ? `<button class="action-btn ${!isCP?'active-status':''}" title="Prepnúť OK/CP" onclick="toggleItemStatus(${i.id})">✓</button>` : ''}
+                        <button class="action-btn ${isEditing?'is-active-edit':''}" title="Upraviť" onclick="editItem(${i.id})">✎</button>
+                        <button class="action-btn" title="Klonovať" onclick="duplicateItem(${i.id})">📋</button>
+                        <button class="action-btn" title="Zmazať" onclick="deleteItem(${i.id})">✖</button>
                     </div>
-                </div>`;
+                </div>
+            `;
         });
 
+        document.getElementById('total_kg_ever').innerText = (tKg/1000).toFixed(2) + " kg";
+        document.getElementById('total_time_ever').innerText = `${Math.floor(tMins/60)}h ${tMins%60}m`;
         document.getElementById('stat_count').innerText = okCount;
         document.getElementById('stat_obrat').innerText = tObrat.toFixed(2) + " €";
-        document.getElementById('stat_profit').innerText = tProfit.toFixed(2) + " €";
-        document.getElementById('total_kg_ever').innerText = (tKg/1000).toFixed(2) + " kg";
-        document.getElementById('total_time_ever').innerText = Math.floor(tMins/60) + "h " + (tMins%60) + "m";
         document.getElementById('total_mat_cost').innerText = tMat.toFixed(2) + " €";
         document.getElementById('total_ele_cost').innerText = tEle.toFixed(2) + " €";
         document.getElementById('total_spent_other').innerText = tOther.toFixed(2) + " €";
+        document.getElementById('stat_profit').innerText = tProfit.toFixed(2) + " €";
     }
+
+    // Spustí sa pri načítaní stránky
+    applyTexts();
+    refreshUI();
 </script>
 </body>
 </html>
